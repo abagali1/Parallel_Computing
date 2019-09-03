@@ -26,16 +26,15 @@ char main(int argc, char **argv) {
 	char grid[ROW][COL];
 
 
-
-	FILE *f = fopen("file.txt", "w");
-	if (f == NULL) {
-		printf("Error Opening file\n");
-		return 1;
-	}
 	if (argc == 1) {
 		printf("Usage ./<filename> <printer_name>\n");
 		printf("Error: Missing Printer Name\n");
 		printf("Pass With --no-print flag to bypass\n");
+		return 1;
+	}
+	FILE *f = fopen("file.txt", "w");
+	if (f == NULL) {
+		printf("Error Opening file\n");
 		return 1;
 	}
 
@@ -170,4 +169,5 @@ void sendToPrinter(char printer[]) {
 	strcat(command, printer);
 	strcat(command, " file.txt");
 	system(command);
+	//printf("%s\n",command );
 }
