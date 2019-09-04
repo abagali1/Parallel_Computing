@@ -157,7 +157,7 @@ void writeToFile(FILE *f, int o, double p, int fi, int s, int a, int r) {
 	fprintf(f, "\t%d slots have adjacent slots that are also turned ON.\n\n", a);
 	fprintf(f, "9. Initialize 100 grids instead of just one.\n\n");
 	fprintf(f, "10.What is the average percent from Question #5 over all of these grids?\n");
-	fprintf(f, "\t%lf%%\n\n", r);
+	fprintf(f, "\t%d%%\n\n", r);
 	fprintf(f, "-----------------------------------------------------\nEND");
 	fclose(f);
 
