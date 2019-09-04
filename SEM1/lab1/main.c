@@ -21,7 +21,7 @@ void writeToFile(FILE *f, int o, double p, int fi, int s, int a, int r);
 void sendToPrinter(char printer[]);
 
 
-char main(int argc, char **argv) {
+int main(int argc, char **argv) {
 	srand(1738114);
 	char grid[ROW][COL];
 
