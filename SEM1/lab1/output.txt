@@ -30,7 +30,7 @@ Class Period: 3
 9. Initialize 100 grids instead of just one.
 
 10.What is the average percent from Question #5 over all of these grids?
-	58.083333%
+	60%
 
 -----------------------------------------------------
 END

@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 		printf("Pass With --no-print flag to bypass\n");
 		return 1;
 	}
-	FILE *f = fopen("file.txt", "w");
+	FILE *f = fopen("output.txt", "w");
 	if (f == NULL) {
 		printf("Error Opening file\n");
 		return 1;
