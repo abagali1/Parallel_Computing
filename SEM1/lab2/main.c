@@ -22,6 +22,8 @@ void enqueue(tuple q[ROW * COL], int qX, int qY);
 tuple dequeue(tuple q[ROW * COL]);
 tuple peek(tuple q[ROW * COL]);
 bool hasVisited(bool v[ROW][COL], int x, int y);
+void printArr(tuple a[ROW * COL]);
+
 
 
 int qSize;
@@ -91,6 +93,7 @@ void startFire(char g[][COL]) {
 			g[i][0] = '*';
 		}
 	}
+
 	spread(g);
 }
 
@@ -114,15 +117,14 @@ void spread(char g[][COL]) {
 		if (g[i][0] == '*') {
 			visited[i][0] = true;
 			g[i][0] = ' ';
+			//printf("ADD: %d\n",i);
 			enqueue(queue, i, 0);
+
 		}
 	}
-	printf("(%d,%d)\n", queue[0].x, queue[0].y );
-	printf("(%d,%d)\n", queue[1].x, queue[1].y );
 
 	while (!isEmpty(queue)) {
 		tuple t = dequeue(queue);
-		printf("(%d,%d)\n", t.x, t.y );
 		g[t.x][t.y] = ' ';
 
 		if (t.x > 0) {
@@ -153,8 +155,11 @@ void spread(char g[][COL]) {
 				g[t.x][t.y + 1] = '*';
 			}
 		}
+		//printf("SIZE IN LOOP:%d\n",qSize );
+		system("clear");
 		show(g);
 		printf("-----------------\n");
+		delay(2000);
 	}
 }
 
@@ -164,6 +169,7 @@ bool isEmpty(tuple x[ROW * COL]) {
 }
 
 void enqueue(tuple q[ROW * COL], int qX, int qY) {
+	//printf("ENQUEUE: (%d,%d)\n", qX, qY );
 	q[qSize].x = qX;
 	q[qSize].y = qY;
 	qSize++;
@@ -172,8 +178,8 @@ void enqueue(tuple q[ROW * COL], int qX, int qY) {
 tuple dequeue(tuple q[ROW * COL]) {
 	tuple ret = q[0];
 	qSize--;
-	for (int i = ROW * COL; i > qSize; i--) {
-		q[i - 1] = q[i];
+	for (int i = 0; i < ROW * COL; i++) {
+		q[i] = q[i + 1];
 	}
 	return ret;
 }
@@ -184,4 +190,13 @@ tuple peek(tuple q[ROW * COL]) {
 
 bool hasVisited(bool v[ROW][COL], int x, int y) {
 	return v[x][y];
+}
+
+void printArr(tuple a[ROW * COL]) {
+	for (int i = 0; i < ROW * COL; i++) {
+		if (a[i].x != -1 && a[i].y != -1) {
+			printf("(%d,%d),", a[i].x, a[i].y );
+		}
+	}
+	printf("\n");
 }
