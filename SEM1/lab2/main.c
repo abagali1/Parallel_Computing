@@ -84,7 +84,6 @@ void show(char g[][COL]) {
 
 void startFire(char g[][COL]) {
 	int i, j;
-	int step = 0;
 	int burning = 0;
 
 
@@ -93,7 +92,6 @@ void startFire(char g[][COL]) {
 			g[i][0] = '*';
 		}
 	}
-
 	spread(g);
 }
 
@@ -106,24 +104,29 @@ void spread(char g[][COL]) {
 	tuple queue[ROW * COL];
 
 	bool visited[ROW][COL];
-
+	int step = 0;
 
 	for (int i = 0; i < ROW * COL; i++) {
 		queue[i].x = -1;
 		queue[i].y = -1;
 	}
-	show(g);
 	for (int i = 0; i < ROW; i++) {
 		if (g[i][0] == '*') {
 			visited[i][0] = true;
-			g[i][0] = ' ';
 			//printf("ADD: %d\n",i);
 			enqueue(queue, i, 0);
 
 		}
 	}
 
+
 	while (!isEmpty(queue)) {
+		system("clear");
+		show(g);
+		printf("%d/%d\n", step, COL);
+		printf("-----------------\n");
+		delay(2000);
+
 		tuple t = dequeue(queue);
 		g[t.x][t.y] = ' ';
 
@@ -155,11 +158,7 @@ void spread(char g[][COL]) {
 				g[t.x][t.y + 1] = '*';
 			}
 		}
-		//printf("SIZE IN LOOP:%d\n",qSize );
-		system("clear");
-		show(g);
-		printf("-----------------\n");
-		delay(2000);
+		step++;
 	}
 }
 
@@ -189,7 +188,7 @@ tuple peek(tuple q[ROW * COL]) {
 }
 
 bool hasVisited(bool v[ROW][COL], int x, int y) {
-	return v[x][y];
+	return false;
 }
 
 void printArr(tuple a[ROW * COL]) {
