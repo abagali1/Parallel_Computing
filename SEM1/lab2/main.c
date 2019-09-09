@@ -53,7 +53,7 @@ int main() {
 	printf("Start fire\n");
 	startFire(grid);
 	printf("show\n");
-
+	show(grid);
 
 	//writeToFile(f);
 
@@ -109,11 +109,11 @@ void spread(char g[][COL]) {
 	for (int i = 0; i < ROW * COL; i++) {
 		queue[i].x = -1;
 		queue[i].y = -1;
+		queue[i].z = -1;
 	}
 	for (int i = 0; i < ROW; i++) {
 		if (g[i][0] == '*') {
 			visited[i][0] = true;
-			//printf("ADD: %d\n",i);
 			enqueue(queue, i, 0);
 
 		}
@@ -121,12 +121,6 @@ void spread(char g[][COL]) {
 
 
 	while (!isEmpty(queue)) {
-		system("clear");
-		show(g);
-		printf("%d/%d\n", step, COL);
-		printf("-----------------\n");
-		delay(2000);
-
 		tuple t = dequeue(queue);
 		g[t.x][t.y] = ' ';
 
@@ -158,7 +152,7 @@ void spread(char g[][COL]) {
 				g[t.x][t.y + 1] = '*';
 			}
 		}
-		step++;
+
 	}
 }
 
@@ -171,6 +165,7 @@ void enqueue(tuple q[ROW * COL], int qX, int qY) {
 	//printf("ENQUEUE: (%d,%d)\n", qX, qY );
 	q[qSize].x = qX;
 	q[qSize].y = qY;
+	q[qSize].z = (unsigned)time(NULL);
 	qSize++;
 }
 
