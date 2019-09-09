@@ -14,11 +14,11 @@ typedef struct Tuple tuple;
 
 void fill(char g[][COL], double p);
 void show(char g[][COL]);
-void startFire(char g[][COL]);
-void spread(char g[][COL]);
+int startFire(char g[][COL]);
+int spread(char g[][COL]);
 void writeToFile(FILE *f);
 bool isEmpty(tuple x[ROW * COL]);
-void enqueue(tuple q[ROW * COL], int qX, int qY);
+void enqueue(tuple q[ROW * COL], int qX, int qY, int time);
 tuple dequeue(tuple q[ROW * COL]);
 tuple peek(tuple q[ROW * COL]);
 bool hasVisited(bool v[ROW][COL], int x, int y);
@@ -27,6 +27,7 @@ void printArr(tuple a[ROW * COL]);
 
 
 int qSize;
+int timeCounter;
 
 
 double r() {
@@ -51,10 +52,8 @@ int main() {
 
 	fill(grid, P);
 	printf("Start fire\n");
-	startFire(grid);
-	printf("show\n");
-	show(grid);
-
+	int step = startFire(grid);
+	printf("Steps: %d/%d\n",step, COL );
 	//writeToFile(f);
 
 }
@@ -82,7 +81,7 @@ void show(char g[][COL]) {
 	}
 }
 
-void startFire(char g[][COL]) {
+int startFire(char g[][COL]) {
 	int i, j;
 	int burning = 0;
 
@@ -92,7 +91,7 @@ void startFire(char g[][COL]) {
 			g[i][0] = '*';
 		}
 	}
-	spread(g);
+	return spread(g);
 }
 
 
@@ -100,7 +99,7 @@ void writeToFile(FILE *f) {
 	fprintf(f, "Print your name: Anup Bagali\n\n\nToday's date: 09/05/19\n\n\nClass period: 3\n\n\n-----------------------------------------------------\n1. Initialize a grid M rows -by- N columns.\n2. Each slot has a P%% chance to be turned ON.\n3. At time zero IGNITE the on-slots in the left column.\n4. Then count the number of steps it takes to BURNOUT.\n5. At each timestep spread to the four nearest neighbors.\n6. Do not include diagonal neighbors.\n7. Normalize the final count by dividing by the width.\n8. Average the normalized burnout time over T trials.\n9. Plot the average step counts for inputs 0 < P < 100.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n10. Report the random number seed, M, N, T, and delta P.\nM: %d, N: %d, T: %d, P: %d\n\n\n\n\n-----------------------------------------------------\nEND\n", ROW, COL, T, P );
 }
 
-void spread(char g[][COL]) {
+int spread(char g[][COL]) {
 	tuple queue[ROW * COL];
 
 	bool visited[ROW][COL];
@@ -114,12 +113,13 @@ void spread(char g[][COL]) {
 	for (int i = 0; i < ROW; i++) {
 		if (g[i][0] == '*') {
 			visited[i][0] = true;
-			enqueue(queue, i, 0);
+			timeCounter = 0;
+			enqueue(queue, i, 0, timeCounter);
 
 		}
 	}
 
-
+	tuple prev;
 	while (!isEmpty(queue)) {
 		tuple t = dequeue(queue);
 		g[t.x][t.y] = ' ';
@@ -127,33 +127,42 @@ void spread(char g[][COL]) {
 		if (t.x > 0) {
 			if (g[t.x - 1][t.y] == 'T' && !hasVisited(visited, t.x - 1, t.y)) {
 				visited[t.x - 1][t.y] = true;
-				enqueue(queue, t.x - 1, t.y);
+				enqueue(queue, t.x - 1, t.y, t.z+1);
 				g[t.x - 1][t.y] = '*';
 			}
 		}
 		if (t.x < ROW - 1) {
 			if (g[t.x + 1][t.y] == 'T' && !hasVisited(visited, t.x + 1, t.y)) {
 				visited[t.x + 1][t.y] = true;
-				enqueue(queue, t.x + 1, t.y);
+				enqueue(queue, t.x + 1, t.y, t.z+1);
 				g[t.x + 1][t.y] = '*';
 			}
 		}
 		if (t.y > 0) {
 			if (g[t.x][t.y - 1] == 'T' && !hasVisited(visited, t.x, t.y - 1)) {
 				visited[t.x][t.y - 1] = true;
-				enqueue(queue, t.x, t.y - 1);
+				enqueue(queue, t.x, t.y - 1, t.z+1);
 				g[t.x][t.y - 1] = '*';
 			}
 		}
 		if (t.y < COL - 1 ) {
 			if (g[t.x][t.y + 1] == 'T' && !hasVisited(visited, t.x, t.y + 1)) {
 				visited[t.x][t.y + 1] = true;
-				enqueue(queue, t.x, t.y + 1);
+				enqueue(queue, t.x, t.y + 1, t.z+1);
 				g[t.x][t.y + 1] = '*';
 			}
 		}
-
+		if (t.z > prev.z) {
+			system("clear");
+			show(g);
+			printf("%d/%d\n", step, COL);
+			printf("-----------------\n");
+			delay(2000);
+			step++;
+		}
+		prev = t;
 	}
+	return step;
 }
 
 
@@ -161,11 +170,11 @@ bool isEmpty(tuple x[ROW * COL]) {
 	return qSize == 0;
 }
 
-void enqueue(tuple q[ROW * COL], int qX, int qY) {
+void enqueue(tuple q[ROW * COL], int qX, int qY, int t) {
 	//printf("ENQUEUE: (%d,%d)\n", qX, qY );
 	q[qSize].x = qX;
 	q[qSize].y = qY;
-	q[qSize].z = (unsigned)time(NULL);
+	q[qSize].z = t;
 	qSize++;
 }
 
