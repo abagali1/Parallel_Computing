@@ -8,7 +8,7 @@
 #define ROW 100
 #define COL 100
 #define T 100
-#define dP 0.05
+#define dP 0.005
 #define SEED 1738114
 typedef struct Tuple tuple;
 
