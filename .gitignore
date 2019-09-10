@@ -1,3 +1,4 @@
 .idea/
 *.out
 *.gch
+.gdb_history
