@@ -5,10 +5,10 @@
 #include "Tuple.h"
 
 
-#define ROW 20
-#define COL 20
-#define P 0.60
+#define ROW 100
+#define COL 100
 #define T 100
+#define dP 0.05
 #define SEED 1738114
 typedef struct Tuple tuple;
 
@@ -28,6 +28,7 @@ void printArr(tuple a[ROW * COL]);
 
 int qSize;
 int timeCounter;
+double P = 0.0;
 
 
 double r() {
@@ -45,16 +46,24 @@ int main() {
 	srand(SEED);
 	char grid[ROW][COL];
 	FILE *f = fopen("output.txt", "w");
-	if (f == NULL) {
+	FILE *df = fopen("data.txt","w");
+	if (f == NULL || df == NULL) {
 		printf("Error Opening file\n");
 		return 1;
 	}
 
-	fill(grid, P);
 	printf("Start fire\n");
-	int step = startFire(grid);
-	printf("Steps: %d/%d\n",step, COL );
-	//writeToFile(f);
+	for(double i=0;i<1.05;i+=dP)
+	{
+		P = i;
+		fill(grid, P);
+		show(grid);
+		printf("I%lf\n",i);
+		int step = startFire(grid);
+		fprintf(df, "%lf,%d\n", step, P);
+	}
+	//printf("Steps: %d/%d\n",step, COL );
+	writeToFile(f);
 
 }
 
@@ -96,7 +105,7 @@ int startFire(char g[][COL]) {
 
 
 void writeToFile(FILE *f) {
-	fprintf(f, "Print your name: Anup Bagali\n\n\nToday's date: 09/05/19\n\n\nClass period: 3\n\n\n-----------------------------------------------------\n1. Initialize a grid M rows -by- N columns.\n2. Each slot has a P%% chance to be turned ON.\n3. At time zero IGNITE the on-slots in the left column.\n4. Then count the number of steps it takes to BURNOUT.\n5. At each timestep spread to the four nearest neighbors.\n6. Do not include diagonal neighbors.\n7. Normalize the final count by dividing by the width.\n8. Average the normalized burnout time over T trials.\n9. Plot the average step counts for inputs 0 < P < 100.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n10. Report the random number seed, M, N, T, and delta P.\nM: %d, N: %d, T: %d, P: %d\n\n\n\n\n-----------------------------------------------------\nEND\n", ROW, COL, T, P );
+	fprintf(f, "Print your name: Anup Bagali\n\n\nToday's date: 09/05/19\n\n\nClass period: 3\n\n\n-----------------------------------------------------\n1. Initialize a grid M rows -by- N columns.\n2. Each slot has a P%% chance to be turned ON.\n3. At time zero IGNITE the on-slots in the left column.\n4. Then count the number of steps it takes to BURNOUT.\n5. At each timestep spread to the four nearest neighbors.\n6. Do not include diagonal neighbors.\n7. Normalize the final count by dividing by the width.\n8. Average the normalized burnout time over T trials.\n9. Plot the average step counts for inputs 0 < P < 100.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n10. Report the random number seed, M, N, T, and delta P.\nM: %d, N: %d, T: %d, delta P: %lf\n\n\n\n\n-----------------------------------------------------\nEND\n", ROW, COL, T, dP );
 }
 
 int spread(char g[][COL]) {
@@ -153,11 +162,11 @@ int spread(char g[][COL]) {
 			}
 		}
 		if (t.z > prev.z) {
-			system("clear");
-			show(g);
-			printf("%d/%d\n", step, COL);
-			printf("-----------------\n");
-			delay(2000);
+//			system("clear");
+//			show(g);
+//			printf("%d/%d\n", step, COL);
+//			printf("-----------------\n");
+//			delay(2000);
 			step++;
 		}
 		prev = t;
