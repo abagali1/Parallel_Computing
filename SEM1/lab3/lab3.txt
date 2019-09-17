@@ -1,0 +1,60 @@
+Print your name:
+
+
+
+Today's date:
+
+
+
+Class period:
+
+
+
+-----------------------------------------------------
+
+1. Plot the average step counts for inputs 0 < P < 100.
+
+2. Report the random number seed, M, N, T, and delta P.
+
+3. Change M and N.
+
+4. For example, scale each value up by a factor of two.
+
+5. Plot the average step counts for inputs 0 < P < 100.
+
+6. Report the change in M and N.
+
+7. Show the two plots together, in an overlay.
+
+8. Scale up yet again.
+
+9. Show all three plots together, in an overlay.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10. Report the three different values for M and N.
+
+
+
+
+
+-----------------------------------------------------
+END

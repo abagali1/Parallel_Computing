@@ -5,10 +5,10 @@
 #include "Tuple.h"
 
 
-#define ROW 100
-#define COL 100
+#define ROW 40
+#define COL 40
 #define T 100
-#define dP 0.005
+#define dP 0.05
 #define SEED 1738114
 typedef struct Tuple tuple;
 
@@ -53,14 +53,14 @@ int main() {
 	}
 
 	printf("Start fire\n");
-	for(double i=0;i<1.05;i+=dP)
+	for(double i=0;i<1.000000000001;i+=dP)
 	{
 		P = i;
 		fill(grid, P);
 		show(grid);
 		printf("I%lf\n",i);
-		int step = startFire(grid);
-		fprintf(df, "%lf,%d\n", step, P);
+		double step = (double)(startFire(grid)) / ROW;
+		fprintf(df, "%lf\n", step);
 	}
 	//printf("Steps: %d/%d\n",step, COL );
 	writeToFile(f);

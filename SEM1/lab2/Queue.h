@@ -1,11 +1,15 @@
 // TODO: Try to write?
-#define SIZE 30*40
-
-struct Queue
+typedef struct 
 {
-	signed int size;
-	signed int q[SIZE];
-
+	unsigned int size;
+	int* array;
 }Queue;
 
+
+Queue* createQueue(unsigned int size){
+	Queue* q = (struct Queue*) malloc(sizeof(struct Queue));
+	q->size = size;
+	q->array = (int*) malloc(sizeof(int) * queue->size);
+	return q;
+}
 
