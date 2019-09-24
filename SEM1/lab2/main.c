@@ -45,13 +45,6 @@ void delay(int s) {
 int main() {
 	srand(SEED);
 	char grid[ROW][COL];
-	FILE *f = fopen("output.txt", "w");
-	FILE *df = fopen("data.txt","w");
-	if (f == NULL || df == NULL) {
-		printf("Error Opening file\n");
-		return 1;
-	}
-
 	printf("Start fire\n");
 	for(double i=0;i<1.05;i+=dP)
 	{
@@ -62,8 +55,6 @@ int main() {
 		int step = startFire(grid);
 		fprintf(df, "%lf,%d\n", step, P);
 	}
-	//printf("Steps: %d/%d\n",step, COL );
-	writeToFile(f);
 
 }
 
