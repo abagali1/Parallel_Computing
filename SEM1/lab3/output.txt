@@ -38,7 +38,7 @@ Class period: 3
 
 
 10. Report the random number seed, M, N, T, and delta P.
-M: 40, N: 40, T: 100, delta P: 0.050000
+M: 20, N: 20, T: 100, delta P: 0.050000
 
 
 
