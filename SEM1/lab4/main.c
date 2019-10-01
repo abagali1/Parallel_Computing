@@ -34,18 +34,20 @@ void fill(char g[][COL], double p ) {
    }
 }
 
-int enqueue(tuple *q, int qX, int qY, int* t, int* qSize) {
-   q[qSize].x = qX;
-   q[qSize].y = qY;
-   q[qSize].z = t;
-   return qSize + 1;
+int enqueue(tuple q[ROW * COL], int qX, int qY, int t, int* qSize) {
+   q[*qSize].x = qX;
+   q[*qSize].y = qY;
+   q[*qSize].z = t;
+   *qSize = *qSize + 1;
+   
 }
 
-tuple dequeue(tuple q[ROW * COL], int qSize) {
+tuple dequeue(tuple q[ROW * COL], int* qSize) {
    tuple ret = q[0];
    for (int i = 0; i < ROW * COL; i++) {
       q[i] = q[i + 1];
    }
+   *qSize = *qSize - 1;
    return ret;
 }
 
@@ -59,15 +61,11 @@ int startFire(char g[][COL]) {
       }
    }
    tuple queue[ROW * COL];
-   tuple *queuePointer;
-   queuePointer = queue;
 
    int step = 0;
 
    int qSize = 0;
    int *sizePointer = &qSize;
-   int timeCounter = 0;
-   int *timePointer = &timeCounter;
 
    for (int i = 0; i < ROW * COL; i++) {
       queue[i].x = -1;
@@ -76,38 +74,36 @@ int startFire(char g[][COL]) {
    }
    for (int i = 0; i < ROW; i++) {
       if (g[i][0] == '*') {
-         timeCounter = 0;
-         qSize = enqueue(queuePointer, i, 0, timeCounter,qSize);
+         enqueue(queue, i, 0, 0,sizePointer);
 
       }
    }
    tuple prev;
    while (qSize != 0) {
-      tuple t = dequeue(queue,qSize);
-      printf("T: (%d, %d, %d)",t.x,t.y,t.z);
+      tuple t = dequeue(queue,sizePointer);
       g[t.x][t.y] = ' ';
 
       if (t.x > 0) {
          if (g[t.x - 1][t.y] == 'T') {
-            enqueue(queue, t.x - 1, t.y, t.z+1,qSize);
+            enqueue(queue, t.x - 1, t.y, t.z+1,sizePointer);
             g[t.x - 1][t.y] = '*';
          }
       }
       if (t.x < ROW - 1) {
          if (g[t.x + 1][t.y] == 'T') {
-            enqueue(queue, t.x + 1, t.y, t.z+1,qSize);
+            enqueue(queue, t.x + 1, t.y, t.z+1,sizePointer);
             g[t.x + 1][t.y] = '*';
          }
       }
       if (t.y > 0) {
          if (g[t.x][t.y - 1] == 'T') {
-            enqueue(queue, t.x, t.y - 1, t.z+1,qSize);
+            enqueue(queue, t.x, t.y - 1, t.z+1,sizePointer);
             g[t.x][t.y - 1] = '*';
          }
       }
       if (t.y < COL - 1 ) {
          if (g[t.x][t.y + 1] == 'T') {
-            enqueue(queue, t.x, t.y + 1, t.z+1,qSize);
+            enqueue(queue, t.x, t.y + 1, t.z+1,sizePointer);
             g[t.x][t.y + 1] = '*';
          }
       }
@@ -115,7 +111,6 @@ int startFire(char g[][COL]) {
          step++;
       }
       prev = t;
-      printf("SSS: %d\n",step );
    }
    return step;
 }
@@ -172,7 +167,6 @@ int main( int argc , char* argv[] )
          {
             fill(grid,i);
             int m = startFire(grid);
-            printf("M: %d\n", m);
             step += m *1.0/ ROW;
          }
          //step /= j ;
