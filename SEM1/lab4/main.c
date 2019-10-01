@@ -34,7 +34,7 @@ void fill(char g[][COL], double p ) {
    }
 }
 
-int enqueue(tuple q[ROW * COL], int qX, int qY, int t, int qSize) {
+int enqueue(tuple *q, int qX, int qY, int* t, int* qSize) {
    q[qSize].x = qX;
    q[qSize].y = qY;
    q[qSize].z = t;
@@ -42,11 +42,7 @@ int enqueue(tuple q[ROW * COL], int qX, int qY, int t, int qSize) {
 }
 
 tuple dequeue(tuple q[ROW * COL], int qSize) {
-   tuple ret[2];
-   tuple size;
-   size.x = qSize -1;
-   ret[0] = q[0];
-   ret[1] = size;
+   tuple ret = q[0];
    for (int i = 0; i < ROW * COL; i++) {
       q[i] = q[i + 1];
    }
@@ -63,10 +59,15 @@ int startFire(char g[][COL]) {
       }
    }
    tuple queue[ROW * COL];
+   tuple *queuePointer;
+   queuePointer = queue;
 
    int step = 0;
+
    int qSize = 0;
-   int timeCounter;
+   int *sizePointer = &qSize;
+   int timeCounter = 0;
+   int *timePointer = &timeCounter;
 
    for (int i = 0; i < ROW * COL; i++) {
       queue[i].x = -1;
@@ -76,15 +77,13 @@ int startFire(char g[][COL]) {
    for (int i = 0; i < ROW; i++) {
       if (g[i][0] == '*') {
          timeCounter = 0;
-         qSize = enqueue(queue, i, 0, timeCounter,qSize);
+         qSize = enqueue(queuePointer, i, 0, timeCounter,qSize);
 
       }
    }
    tuple prev;
    while (qSize != 0) {
-      tuple d[2] = dequeue(queue,qSize);
-      t = d[0];
-      qSize = d[1].x;
+      tuple t = dequeue(queue,qSize);
       printf("T: (%d, %d, %d)",t.x,t.y,t.z);
       g[t.x][t.y] = ' ';
 
