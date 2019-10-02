@@ -5,12 +5,12 @@
 #include "mpi.h"
 
 #define T 100
-#define ROW 20
+#define ROW 80
 #define dP 0.05
-#define COL 20
+#define COL 80
 
 
-typedef struct Tuple{
+typedef struct Tuple {
    int x;
    int y;
    int z;
@@ -39,7 +39,7 @@ int enqueue(tuple q[ROW * COL], int qX, int qY, int t, int* qSize) {
    q[*qSize].y = qY;
    q[*qSize].z = t;
    *qSize = *qSize + 1;
-   
+
 }
 
 tuple dequeue(tuple q[ROW * COL], int* qSize) {
@@ -74,36 +74,36 @@ int startFire(char g[][COL]) {
    }
    for (int i = 0; i < ROW; i++) {
       if (g[i][0] == '*') {
-         enqueue(queue, i, 0, 0,sizePointer);
+         enqueue(queue, i, 0, 0, sizePointer);
 
       }
    }
    tuple prev;
    while (qSize != 0) {
-      tuple t = dequeue(queue,sizePointer);
+      tuple t = dequeue(queue, sizePointer);
       g[t.x][t.y] = ' ';
 
       if (t.x > 0) {
          if (g[t.x - 1][t.y] == 'T') {
-            enqueue(queue, t.x - 1, t.y, t.z+1,sizePointer);
+            enqueue(queue, t.x - 1, t.y, t.z + 1, sizePointer);
             g[t.x - 1][t.y] = '*';
          }
       }
       if (t.x < ROW - 1) {
          if (g[t.x + 1][t.y] == 'T') {
-            enqueue(queue, t.x + 1, t.y, t.z+1,sizePointer);
+            enqueue(queue, t.x + 1, t.y, t.z + 1, sizePointer);
             g[t.x + 1][t.y] = '*';
          }
       }
       if (t.y > 0) {
          if (g[t.x][t.y - 1] == 'T') {
-            enqueue(queue, t.x, t.y - 1, t.z+1,sizePointer);
+            enqueue(queue, t.x, t.y - 1, t.z + 1, sizePointer);
             g[t.x][t.y - 1] = '*';
          }
       }
       if (t.y < COL - 1 ) {
          if (g[t.x][t.y + 1] == 'T') {
-            enqueue(queue, t.x, t.y + 1, t.z+1,sizePointer);
+            enqueue(queue, t.x, t.y + 1, t.z + 1, sizePointer);
             g[t.x][t.y + 1] = '*';
          }
       }
@@ -126,13 +126,12 @@ int main( int argc , char* argv[] )
    int        tag = 0 ; // same!
 
    int        k , j  ;
-   int        length = ((int)1/dP)+1;
+   int        length = ((int)1 / dP) + 1;
    double solution[length];
    double* tmp;
-   tmp = malloc(length*sizeof(*tmp));
+   tmp = malloc(length * sizeof(*tmp));
 
-
-   for(int s=0;s<length;s++){
+   for (int s = 0; s < length; s++) {
       solution[s] = 0;
    }
 
@@ -143,30 +142,24 @@ int main( int argc , char* argv[] )
 
    if ( rank == 0 )
    {
-      printf( "\n" ) ;
-      //
-      int a;
       for ( k = 1 ; k < size ; k++ )
       {
          MPI_Recv( tmp , length , MPI_DOUBLE , k , tag , MPI_COMM_WORLD , &status ) ;
-         for(int s=0;s<length;s++){
-            solution[s] += s;
+         for (int s = 0; s < length; s++) {
+            solution[s] += tmp[s];
          }
       }
       int in = 0;
       for (double s = 0; s < 1.000000000001; s += dP) {
-         printf("FIN -> P: %lf, (%d,%lf)\n",s,in,solution[in] );
+         solution[in] /= size-1;
+         printf("%lf\n", solution[in] );
          in++;
       }
 
-      printf( "\n" );
    }
-   //
-   // workers have rank > 0
-   //
    else
    {
-      srand(rank);
+      srand(1738114);
       double step = 0.0;
       int index = 0;
       double i;
@@ -175,15 +168,14 @@ int main( int argc , char* argv[] )
       j = T / size ; // trials = 100 million
       //
       double* solution;
-      solution = malloc(length*sizeof(*solution));
+      solution = malloc(length * sizeof(*solution));
 
       char grid[ROW][COL];
       for (i = 0; i < 1.000000000001; i += dP) {
          for ( k = 0 ; k < j ; k++ )
          {
-            fill(grid,i);
-            int m = startFire(grid);
-            step += m *1.0/ ROW;
+            fill(grid, i);
+            step += (double)(startFire(grid)) / ROW;
          }
          step /= j ;
          solution[index] = step;
@@ -192,13 +184,6 @@ int main( int argc , char* argv[] )
 
       MPI_Send( solution , length , MPI_DOUBLE , 0 , tag , MPI_COMM_WORLD ) ;
    }
-   //
-   // boilerplate
-   //
    MPI_Finalize() ;
-   //
    return 0;
 }
-//
-// end of file
-//
