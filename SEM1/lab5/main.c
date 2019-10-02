@@ -159,7 +159,7 @@ int main( int argc , char* argv[] )
    }
    else
    {
-      srand(rank);
+      srand(1738114);
       double step = 0.0;
       int index = 0;
       double i;
