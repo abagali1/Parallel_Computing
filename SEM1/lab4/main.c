@@ -142,10 +142,7 @@ int main( int argc , char* argv[] )
       int a;
       for ( k = 1 ; k < size ; k++ )
       {
-         MPI_Recv( tmp , 4 , MPI_DOUBLE , k , tag , MPI_COMM_WORLD , &status ) ;
-         for(int a=0;a<21;a++){
-            printf("RECV -> RANK: %d, (%d, %lf)\n",k, a, tmp[a]);
-         }
+         MPI_Recv( tmp , 21 , MPI_DOUBLE , k , tag , MPI_COMM_WORLD , &status ) ;
       }
       //
       printf( "\n" );
@@ -178,13 +175,8 @@ int main( int argc , char* argv[] )
          solution[index] = step;
          index++;
       }
-      for(int b=0;b<21;b++){
-         printf("RANK: %d, (%d, %lf)\n",rank, b, solution[b]);
-      }
 
-      //
-      //
-      MPI_Send( solution , 1 , MPI_DOUBLE , 0 , tag , MPI_COMM_WORLD ) ;
+      MPI_Send( solution , 21 , MPI_DOUBLE , 0 , tag , MPI_COMM_WORLD ) ;
    }
    //
    // boilerplate
