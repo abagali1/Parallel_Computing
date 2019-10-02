@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+import argparse
+import subprocess
+
+def create_file(args):
+    hosts = open(args.hostsfile,'r').read().splitlines()
+    machine = open(args.machinefile,'w')
+    output = []
+
+    for i in hosts:
+        try:
+            mes = subprocess.check_output(f'ssh -o "StrictHostKeyChecking=no" {i} -t "nproc"',shell=True).decode("utf8").strip()
+            machine.write(f"{i} slots={mes}\n")
+        except Exception:
+            continue
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.set_defaults(func=create_file)
+    parser.add_argument("hostsfile",help="path to hostsfile")
+    parser.add_argument("machinefile",help="path to created mpi-compatible machinefile")
+
+    args = parser.parse_args()
+    args.func(args)
+
+if __name__ == '__main__':
+    main()
