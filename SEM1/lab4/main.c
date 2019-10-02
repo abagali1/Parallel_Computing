@@ -126,7 +126,9 @@ int main( int argc , char* argv[] )
    int        tag = 0 ; // same!
 
    int        k , j  ;
-   int tmp[21];
+   double* tmp;
+   tmp = malloc(21*sizeof(*tmp));
+
 
 
    MPI_Init(      &argc          , &argv ) ;
@@ -137,12 +139,13 @@ int main( int argc , char* argv[] )
    {
       printf( "\n" ) ;
       //
+      int a;
       for ( k = 1 ; k < size ; k++ )
       {
-         MPI_Recv( &tmp , 1 , MPI_DOUBLE , k , tag , MPI_COMM_WORLD , &status ) ;
-         // for(int a=0;a<21;a++){
-         //    printf("%d:%d,%d\n",k,a,tmp[a] );
-         // }
+         MPI_Recv( tmp , 4 , MPI_DOUBLE , k , tag , MPI_COMM_WORLD , &status ) ;
+         for(int a=0;a<21;a++){
+            printf("RECV -> RANK: %d, (%d, %lf)\n",k, a, tmp[a]);
+         }
       }
       //
       printf( "\n" );
@@ -153,13 +156,15 @@ int main( int argc , char* argv[] )
    else
    {
       srand(rank);
-      double step = 0.0 , i;
+      double step = 0.0;
       int index = 0;
+      double i;
 
       //
       j = T / size ; // trials = 100 million
       //
-      int solution[21];
+      double* solution;
+      solution = malloc(21*sizeof(*solution));
 
       char grid[ROW][COL];
       for (i = 0; i < 1.000000000001; i += dP) {
@@ -169,14 +174,17 @@ int main( int argc , char* argv[] )
             int m = startFire(grid);
             step += m *1.0/ ROW;
          }
-         //step /= j ;
-         printf("RANK: %d, P: %lf STEP:%lf\n",rank,i,step );
+         step /= j ;
          solution[index] = step;
          index++;
       }
+      for(int b=0;b<21;b++){
+         printf("RANK: %d, (%d, %lf)\n",rank, b, solution[b]);
+      }
+
       //
       //
-      MPI_Send( &solution , 1 , MPI_DOUBLE , 0 , tag , MPI_COMM_WORLD ) ;
+      MPI_Send( solution , 1 , MPI_DOUBLE , 0 , tag , MPI_COMM_WORLD ) ;
    }
    //
    // boilerplate
