@@ -126,9 +126,15 @@ int main( int argc , char* argv[] )
    int        tag = 0 ; // same!
 
    int        k , j  ;
+   int        length = ((int)1/dP)+1;
+   double solution[length];
    double* tmp;
-   tmp = malloc(21*sizeof(*tmp));
+   tmp = malloc(length*sizeof(*tmp));
 
+
+   for(int s=0;s<length;s++){
+      solution[s] = 0;
+   }
 
 
    MPI_Init(      &argc          , &argv ) ;
@@ -142,9 +148,17 @@ int main( int argc , char* argv[] )
       int a;
       for ( k = 1 ; k < size ; k++ )
       {
-         MPI_Recv( tmp , 21 , MPI_DOUBLE , k , tag , MPI_COMM_WORLD , &status ) ;
+         MPI_Recv( tmp , length , MPI_DOUBLE , k , tag , MPI_COMM_WORLD , &status ) ;
+         for(int s=0;s<length;s++){
+            solution[s] += s;
+         }
       }
-      //
+      int in = 0;
+      for (double s = 0; s < 1.000000000001; s += dP) {
+         printf("FIN -> P: %lf, (%d,%lf)\n",s,in,solution[in] );
+         in++;
+      }
+
       printf( "\n" );
    }
    //
@@ -161,7 +175,7 @@ int main( int argc , char* argv[] )
       j = T / size ; // trials = 100 million
       //
       double* solution;
-      solution = malloc(21*sizeof(*solution));
+      solution = malloc(length*sizeof(*solution));
 
       char grid[ROW][COL];
       for (i = 0; i < 1.000000000001; i += dP) {
@@ -176,7 +190,7 @@ int main( int argc , char* argv[] )
          index++;
       }
 
-      MPI_Send( solution , 21 , MPI_DOUBLE , 0 , tag , MPI_COMM_WORLD ) ;
+      MPI_Send( solution , length , MPI_DOUBLE , 0 , tag , MPI_COMM_WORLD ) ;
    }
    //
    // boilerplate
