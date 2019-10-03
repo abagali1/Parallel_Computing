@@ -5,9 +5,9 @@
 #include "mpi.h"
 
 #define T 100
-#define ROW 20
+#define ROW 150
 #define dP 0.05
-#define COL 20
+#define COL 150
 
 
 typedef struct Tuple {
@@ -152,9 +152,9 @@ int main( int argc , char* argv[] )
       int in = 0;
       for (double s = 0; s < 1.000000000001; s += dP) {
          solution[in] /= size-1;
-         printf("%lf\n", solution[in] );
          in++;
       }
+      printf("done\n");
 
    }
    else
