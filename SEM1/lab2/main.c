@@ -5,8 +5,8 @@
 #include "Tuple.h"
 
 
-#define ROW 100
-#define COL 100
+#define ROW 40
+#define COL 40
 #define T 100
 #define dP 0.005
 #define SEED 1738114
@@ -48,12 +48,10 @@ int main() {
 	printf("Start fire\n");
 	for(double i=0;i<1.05;i+=dP)
 	{
-		P = i;
+		P = 0.7;
 		fill(grid, P);
-		show(grid);
-		printf("I%lf\n",i);
 		int step = startFire(grid);
-		fprintf(df, "%lf,%d\n", step, P);
+		fprintf(stdout, "%lf,%d\n", step, P);
 	}
 
 }
@@ -153,11 +151,11 @@ int spread(char g[][COL]) {
 			}
 		}
 		if (t.z > prev.z) {
-//			system("clear");
-//			show(g);
-//			printf("%d/%d\n", step, COL);
-//			printf("-----------------\n");
-//			delay(2000);
+			system("clear");
+			show(g);
+			printf("%d/%d\n", step, COL);
+			printf("-----------------\n");
+			delay(2000);
 			step++;
 		}
 		prev = t;
