@@ -2,12 +2,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "mpi.h"
 
 #define T 100
-#define ROW 20
+#define ROW 150
+#define COL 150
 #define dP 0.05
-#define COL 20
 
 
 typedef struct Tuple {
@@ -119,6 +120,7 @@ int startFire(char g[][COL]) {
 
 int main( int argc , char* argv[] )
 {
+   clock_t start = clock();
    int        size    ; // same
    int        rank    ; // different
    //
@@ -152,14 +154,16 @@ int main( int argc , char* argv[] )
       int in = 0;
       for (double s = 0; s < 1.000000000001; s += dP) {
          solution[in] /= size-1;
-         printf("%lf\n", solution[in] );
          in++;
       }
+      clock_t end = clock();
+      double time = (double)(end-start) / CLOCKS_PER_SEC;
+      printf("%lf\n",time);
 
    }
    else
    {
-      srand(1738114);
+      srand(rank);
       double step = 0.0;
       int index = 0;
       double i;
