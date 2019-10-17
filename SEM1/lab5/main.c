@@ -126,6 +126,8 @@ int main( int argc , char* argv[] )
    //
    MPI_Status status  ;
    int        tag = 0 ; // same!
+   FILE*      f;
+
 
    int        k , j  ;
    int        length = ((int)1 / dP) + 1;
@@ -151,6 +153,7 @@ int main( int argc , char* argv[] )
             solution[s] += tmp[s];
          }
       }
+      f = fopen("data.txt","w");
       int in = 0;
       for (double s = 0; s < 1.000000000001; s += dP) {
          solution[in] /= T;
