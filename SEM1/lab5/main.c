@@ -153,7 +153,7 @@ int main( int argc , char* argv[] )
       }
       int in = 0;
       for (double s = 0; s < 1.000000000001; s += dP) {
-         solution[in] /= size-1;
+         solution[in] /= T;
          in++;
       }
       clock_t end = clock();
@@ -181,7 +181,6 @@ int main( int argc , char* argv[] )
             fill(grid, i);
             step += (double)(startFire(grid)) / ROW;
          }
-         step /= j ;
          solution[index] = step;
          index++;
       }
