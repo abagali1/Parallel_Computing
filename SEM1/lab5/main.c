@@ -157,6 +157,7 @@ int main( int argc , char* argv[] )
       int in = 0;
       for (double s = 0; s < 1.000000000001; s += dP) {
          solution[in] /= T;
+         fprintf(f, "%lf\n",solution[in] );
          in++;
       }
       clock_t end = clock();
