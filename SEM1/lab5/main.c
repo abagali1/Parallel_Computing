@@ -5,9 +5,9 @@
 #include <time.h>
 #include "mpi.h"
 
-#define T 100
-#define ROW 150
-#define COL 150
+#define T 400
+#define ROW 20
+#define COL 20
 #define dP 0.05
 
 
@@ -149,6 +149,11 @@ int main( int argc , char* argv[] )
       for ( k = 1 ; k < size ; k++ )
       {
          MPI_Recv( tmp , length , MPI_DOUBLE , k , tag , MPI_COMM_WORLD , &status ) ;
+         for(int s=0;s<length;s++){
+            printf("%d, %lf", k, tmp[s]);
+         }
+
+
          for (int s = 0; s < length; s++) {
             solution[s] += tmp[s];
          }
