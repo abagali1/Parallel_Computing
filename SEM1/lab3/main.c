@@ -5,8 +5,8 @@
 #include "Tuple.h" 
 
 
-#define ROW 150
-#define COL 150
+#define ROW 120
+#define COL 120
 #define T 100
 #define dP 0.05
 #define SEED 1738114

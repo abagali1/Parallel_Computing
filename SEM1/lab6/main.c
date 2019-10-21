@@ -6,8 +6,8 @@
 #include "mpi.h"
 
 #define T 100
-#define ROW 150
-#define COL 150
+#define ROW 120
+#define COL 120
 #define dP 0.05
 
 
