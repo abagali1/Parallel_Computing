@@ -63,12 +63,15 @@ int main()
 		//
 		x[j] = x[j-1] + DT * vx[j-1] ;
 		y[j] = y[j-1] + DT * vy[j-1] ;
+
 		//
 		// calculate a
 		//
+		a = (G*M) / sqrt( (x[j]*x[j]) + (y[j]*y[j]) );
 		// update vx
+		vx[j] = vx[j-1] + DT*a;
 		// update vy
-		//
+		vy[j] = vy[j-1] + DT*a;
 	}
 	//
 	//////////////////////////////////////////////////
@@ -77,7 +80,7 @@ int main()
 	//
 	for( j = 0 ; j < n ; j ++ )
 	{
-		fprintf( fout , "%d %0.16f %0.16f %0.16f\n" , j , t[j] , x[j] , y[j] ) ;
+		fprintf( fout , "%d %0.16f %0.16f %0.16f %0.16f %0.16f\n" , j , t[j] , x[j] , y[j], vx[j], vy[j] ) ;
 		//
 		// what else to print ?
 		//
