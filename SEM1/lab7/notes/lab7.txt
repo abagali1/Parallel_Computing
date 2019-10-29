@@ -1,0 +1,60 @@
+Print your name:
+
+
+
+Today's date:
+
+
+
+Class period:
+
+
+
+-----------------------------------------------------
+
+1. Earth and a satellite in orbit.
+
+2. Assume a point mass at the origin not moving.
+
+3. Circular orbit.  Duration is 90 minutes.
+
+4. Initialize y = R + 400 km, and vx = sqrt( G*M / y ).
+
+5. Loop, update position and velocity each DT timestep.
+
+6. Plot trajectory, and speed and distance over time.
+
+7. Can include surface of Earth in trajectory plot too.
+
+
+
+
+
+
+
+
+
+8. Elliptical orbit, vx + 20%, duration 4 or 5 hours.
+
+9. Same plots, but include vx and vy over time as well.
+
+
+
+
+
+
+
+
+
+10. Hyperbolic orbit, vx + 50%, x and y farther away.
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------
+END

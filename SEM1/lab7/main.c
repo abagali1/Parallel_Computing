@@ -22,7 +22,7 @@ int main()
 	//
 	// time intervals - duration is 90 minutes
 	//
-	int n = (int)( 0.5 + ( 1.5 * 60 * 60 ) / DT ) ;
+	int n = (int)( 0.5 + ( 4 * 60 * 60 ) / DT ) ;
 	//
 	//////////////////////////////////////////////////
 	//
@@ -31,6 +31,7 @@ int main()
 	double  y[n] ;
 	double vx[n] ;
 	double vy[n] ;
+	double d[n]  ;
 	//
 	//////////////////////////////////////////////////
 	//
@@ -52,8 +53,9 @@ int main()
 	t[0]  =          0.0 ;
 	x[0]  =          0.0 ;
 	y[0]  = R + 400000.0 ;
-	vx[0] =       7670.1 ;
+	vx[0] =       7670.1 * 1.5 ;
 	vy[0] =          0.0 ;
+	d[j]  =			 0.0 ;
 	//
 	//////////////////////////////////////////////////
 	//
@@ -63,30 +65,35 @@ int main()
 		//
 		x[j] = x[j-1] + DT * vx[j-1] ;
 		y[j] = y[j-1] + DT * vy[j-1] ;
+		d[j] = sqrt( (x[j]*x[j]) + (y[j]*y[j]) ); 
 
 		//
 		// calculate a
 		//
-		a = (G*M) / sqrt( (x[j]*x[j]) + (y[j]*y[j]) );
+		a = - ((G*M) / (d[j]*d[j]));
 		// update vx
-		vx[j] = vx[j-1] + DT*a;
+		vx[j] = vx[j-1] + DT*a*(x[j]/d[j]);
 		// update vy
-		vy[j] = vy[j-1] + DT*a;
+		vy[j] = vy[j-1] + DT*a*(y[j]/d[j]);
+
+
 	}
 	//
 	//////////////////////////////////////////////////
 	//
-	fout = fopen( "orbit.txt" , "w" ) ;
+	fout = fopen( "notes/orbit.txt" , "w" ) ;
 	//
 	for( j = 0 ; j < n ; j ++ )
 	{
-		fprintf( fout , "%d %0.16f %0.16f %0.16f %0.16f %0.16f\n" , j , t[j] , x[j] , y[j], vx[j], vy[j] ) ;
+		fprintf( fout , "%d %0.16f %0.16f %0.16f %0.16f %0.16f %0.16f\n" , j , t[j], x[j] , y[j], d[j], vx[j], vy[j] ) ;
 		//
 		// what else to print ?
 		//
 	}
 	//
 	fclose( fout ) ;
+	system("python ./notes/plot.py");
+	system("xdg-open ./notes/graph.png");
 	//
 	return 0 ;
 }
