@@ -64,4 +64,4 @@ plt.title("Vy")
 # plt.axis('off')
 plt.tight_layout()
 
-plt.savefig("graph.png")
+plt.show()
