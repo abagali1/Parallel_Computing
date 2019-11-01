@@ -70,7 +70,7 @@ int main()
 		//
 		// calculate a
 		//
-		a = - ((G*M) / (d[j]*d[j]));
+		a = ((G*M) / (d[j]*d[j]));
 		// update vx
 		vx[j] = vx[j-1] + DT*a*(x[j]/d[j]);
 		// update vy

@@ -1,12 +1,6 @@
-Print your name:
-
-
-
-Today's date:
-
-
-
-Class period:
+Print your name: Anup Bagali
+Today's date: 10/31/19
+Class period: 3
 
 
 
