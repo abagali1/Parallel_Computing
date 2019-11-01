@@ -44,11 +44,11 @@ int main()
 	//
 	//////////////////////////////////////////////////
 	//
-	FILE*  fout  ;
+	FILE*  fout, mout  ;
 	//
 	int    j     ;
 	//
-	double r , a ;
+	double r , a, a_moon ;
 	r = 3.844e8 ;
 	//
 	//////////////////////////////////////////////////
@@ -109,21 +109,17 @@ int main()
 	//////////////////////////////////////////////////
 	//
 	fout = fopen( "orbit.txt" , "w" ) ;
+	mout = fopen( "moon.txt", "w") ;
 	//
 	for( j = 0 ; j < n ; j ++ )
 	{
-		fprintf( fout , "%d %0.16f %0.16f %0.16f %0.16f %0.16f %0.16f %0.16f %0.16f\n" , j , t[j], x[j] , y[j], d[j], vx[j], vy[j], vx_moon[j], vy_moon[j] ) ;
-		//
-		// what else to print ?
-		//
+		fprintf( fout , "%d %0.16f %0.16f %0.16f %0.16f %0.16f %0.16f\n" , j , t[j], x[j] , y[j], d[j], vx[j], vy[j] ) ;
+		fprintf( mout , "%d %0.16f %0.16f %0.16f %0.16f %0.16f %0.16f\n" , j , t[j], x_moon[j], y_moon[j], d_moon[j], vx_moon[j], vy_moon[j]);
 	}
 	//
 	fclose( fout ) ;
 	system("python ./plot.py");
-	system("xdg-open ./graph.png");
 	//
 	return 0 ;
 }
-//
-// end of file
 //

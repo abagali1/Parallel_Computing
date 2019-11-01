@@ -7,16 +7,18 @@ p = 10**5
 v = 7672
 p = 100
 
-t, x, y, d, vx, vy = [], [], [], [], [] ,[]
+t, x, y, d, vx, vy, x_moon, y_moon = [], [], [], [], [] ,[], [], []
 with open("orbit.txt") as f:
     for line in f.readlines():
-        j, ti, xi, yi, di, vxi, vyi = map(float, line.split())
+        j, ti, xi, yi, di, vxi, vyi, x_m, y_m = map(float, line.split())
         t.append(ti)
         x.append(xi)
         y.append(yi)
         d.append(di)
         vx.append(vxi)
         vy.append(vyi)
+        x_moon.append(x_m)
+        y_moon.append(y_m)
 
 t = np.array(t)
 x = np.array(x)
@@ -24,12 +26,14 @@ y = np.array(y)
 d = np.array(d)
 vx = np.array(vx)
 vy = np.array(vy)
+x_m = np.array(x_moon)
+y_m = np.array(y_moon)
 
 plt.figure(figsize=(10, 5))
 
 # ORBIT
 plt.subplot(131)
-plt.scatter(x, y, s=1, color="r")
+plt.scatter(x_m, y_m, s=1, color="r")
 plt.axis('equal')
 plt.title("Orbit")
 
