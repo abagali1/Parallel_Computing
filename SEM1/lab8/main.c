@@ -12,7 +12,7 @@
 //
 #define M 7.349e+22 // kg
 #define R 1.7374e+6 // m
-#define V 1023.157
+#define V 1023.157  // m/s
 //
 // parameters
 //
@@ -23,7 +23,7 @@ int main()
 	//
 	// time intervals - duration is 90 minutes
 	//
-	int n = (int)( 0.5 + ( 4 * 60 * 60 ) / DT ) ;
+	int n = (int)( 0.5 + ( 1.5 * 60 * 60 ) / DT ) ;
 	//
 	//////////////////////////////////////////////////
 	//
@@ -33,23 +33,14 @@ int main()
 	double vx[n] ;
 	double vy[n] ;
 	double d[n]  ;
-
-
-	double x_moon[n];
-	double y_moon[n];
-	double vx_moon[n];
-	double vy_moon[n];
-	double d_moon[n];
-
 	//
 	//////////////////////////////////////////////////
 	//
-	FILE*  fout, mout  ;
+	FILE*  fout  ;
 	//
 	int    j     ;
 	//
-	double r , a, a_moon ;
-	r = 3.844e8 ;
+	double r , a ;
 	//
 	//////////////////////////////////////////////////
 	//
@@ -66,14 +57,6 @@ int main()
 	vx[0] =       7670.1 * 1.5 ;
 	vy[0] =          0.0 ;
 	d[j]  =			 0.0 ;
-	
-	x_moon[0] =			r;
-	y_moon[0] = 		0;
-	vx_moon[0]=			0;
-	vy_moon[0]=			V;
-	d_moon[0] = 		r;
-
-
 	//
 	//////////////////////////////////////////////////
 	//
@@ -83,25 +66,16 @@ int main()
 		//
 		x[j] = x[j-1] + DT * vx[j-1] ;
 		y[j] = y[j-1] + DT * vy[j-1] ;
-		d[j] = sqrt( (x[j]*x[j]) + (y[j]*y[j]) );
-
-
-		x_moon[j] = x_moon[j-1] + DT * vx[j-1];
-		y_moon[j] = y_moon[j-1] + DT * vy[j-1];
-		d_moon[j] = sqrt( (x_moon[j]*x_moon[j]) + (y_moon[j]*y_moon[j]) );
+		d[j] = sqrt( (x[j]*x[j]) + (y[j]*y[j]) ); 
 
 		//
 		// calculate a
 		//
-		a = (G*M) / (d[j]*d[j]);
-		a_moon = (G*M) / (d_moon[j] * d_moon[j]);
+		a = ((G*M) / (d[j]*d[j]));
 		// update vx
 		vx[j] = vx[j-1] + DT*a*(x[j]/d[j]);
 		// update vy
 		vy[j] = vy[j-1] + DT*a*(y[j]/d[j]);
-
-		vx_moon[j] = vx_moon[j-1] + DT*a_moon*(x_moon[j]/d_moon[j]);
-		vy_moon[j] = vy_moon[j-1] + DT*a_moon*(y_moon[j]/d_moon[j]);
 
 
 	}
@@ -109,17 +83,19 @@ int main()
 	//////////////////////////////////////////////////
 	//
 	fout = fopen( "orbit.txt" , "w" ) ;
-	mout = fopen( "moon.txt", "w") ;
 	//
 	for( j = 0 ; j < n ; j ++ )
 	{
 		fprintf( fout , "%d %0.16f %0.16f %0.16f %0.16f %0.16f %0.16f\n" , j , t[j], x[j] , y[j], d[j], vx[j], vy[j] ) ;
-		fprintf( mout , "%d %0.16f %0.16f %0.16f %0.16f %0.16f %0.16f\n" , j , t[j], x_moon[j], y_moon[j], d_moon[j], vx_moon[j], vy_moon[j]);
+		//
+		// what else to print ?
+		//
 	}
 	//
 	fclose( fout ) ;
-	system("python ./plot.py");
 	//
 	return 0 ;
 }
+//
+// end of file
 //
