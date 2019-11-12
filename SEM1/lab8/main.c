@@ -56,7 +56,7 @@ int main()
 	//
 	t[0]  =          96302.0 ;
 
-	double theta = 6;
+	double theta = 6.0;
 
 	// Reserved for spaceship
 	x[0]  =          R + 202751774.4	 ;
