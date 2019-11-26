@@ -33,7 +33,8 @@ plt.figure(figsize=(10, 5))
 
 # ORBIT
 plt.subplot(131)
-plt.scatter(x_m, y_m, s=1, color="r")
+plt.scatter(x, y, s=1, color="r")
+plt.scatter(x_moon, y_moon, s=1, color="g")
 plt.axis('equal')
 plt.title("Orbit")
 

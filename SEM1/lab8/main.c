@@ -17,7 +17,7 @@
 // parameters
 //
 #define DT 0.25     // s
-#define n (int)( 0.5 + ( 200 * 60 * 60 ) / DT )
+#define n (int)( 0.5 + ( 90 * 60 * 60 ) / DT )
 
 
 double  t[n] ;
@@ -59,23 +59,23 @@ int main()
 	double theta = 6.0;
 
 	// Reserved for spaceship
-	x[0]  =          R + 202751774.4	 ;
-	y[0]  =          0   ;
-	vx[0] = 				 1527.048 * sin(theta * (180/M_PI)) ;
-	vy[0] =          1527.048 * cos(theta * (180/M_PI)) ;
-	d[0]  =			 		 0.0 ;
+	x[0]  =          R + 202751774.4* cos(theta * (M_PI/180)) ;
+	y[0]  =          R + 202751774.4 * sin(theta * (M_PI/180))   ;
+	vx[0] = 		 1527.048 * cos(theta * (M_PI/180)) ;
+	vy[0] =          1527.048 * sin(theta * (M_PI/180)) ;
+	d[0]  =			 0.0 ;
 
 
-	x_moon[0] = 		 r   ;
-	y_moon[0] = 		 0	;
-	vx_moon[0] =			0 ;
-	vy_moon[0] = 			V_MOON;
-	d_moon[0]  =			0;
+	x_moon[0]  = 		 r  ;
+	y_moon[0]  = 		 0	;
+	vx_moon[0] =		 0  ;
+	vy_moon[0] = 		 V_MOON  ;
+	d_moon[0]  =		 0  ;
 
 	//
 	//////////////////////////////////////////////////
 	//
-	for( j = 1 ; j < n ; j ++ )
+	for( j = 1 ; j < n ; j ++ ) 
 	{
 		t[j] = t[j-1] + DT           ;
 		//
@@ -96,18 +96,17 @@ int main()
 
 		// Spaceship and Moon
 		double dim = pow(x_moon[j]-x[j], 2) + pow(y_moon[j]-y[j],2);
-		double hype = sqrt(dim);
-		a = - ((G*M_MOON)/dim);
+		double hyp = sqrt(dim);
+		a_moon = - ((G*M_MOON)/dim);
 
-		if(hype < R){
+		if(hyp < R){
 			printf("Crashed into moon");
 			return -1;
 		}
 
 
-
-		vx[j] = vx[j-1] + DT*a*(x[j]/d[j]) + DT*a*(x_moon[j]-x[j]/hype);
-		vy[j] = vy[j-1] + DT*a*(y[j]/d[j]) + DT*a*(y_moon[j]-y[j]/hype);
+		vx[j] = vx[j-1] + DT*a*(x[j]/d[j]) + DT*a_moon*(x_moon[j]-x[j]/hyp);
+		vy[j] = vy[j-1] + DT*a*(y[j]/d[j]) + DT*a_moon*(y_moon[j]-y[j]/hyp);
 
 
 	}
