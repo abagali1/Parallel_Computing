@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 
 	double theta;
 	sscanf(argv[1],"%lf",&theta);
-	theta *= 3.1415 / 180;
+	theta *= 3.141592653589793238462643383279502 / 180.0;
 
 	// Reserved for spaceship
 	x[0]  =          (R + 202751774.4) * cos(theta) ;
@@ -90,8 +90,8 @@ int main(int argc, char** argv)
 		vy_moon[j] = vy_moon[j-1] + DT*a*(y_moon[j]/d_moon[j]);
 
 
-		x[j] = x[j-1] + DT * vx[j-1];
-		y[j] = y[j-1] + DT * vy[j-1];
+		x[j] = x[j-1] + (DT * vx[j-1]);
+		y[j] = y[j-1] + (DT * vy[j-1]);
 
 		// Earth and spaceship
 		d[j] = sqrt( pow(x[j],2) + pow(y[j], 2) );
@@ -108,8 +108,8 @@ int main(int argc, char** argv)
 		}
 
 
-		vx[j] = vx[j-1] + DT*a*(x[j]/d[j]) + DT*a_moon*((x_moon[j]-x[j])/hyp);
-		vy[j] = vy[j-1] + DT*a*(y[j]/d[j]) + DT*a_moon*((y_moon[j]-y[j])/hyp);
+		vx[j] = vx[j-1] + DT*a*(x[j]/d[j]) + DT*a_moon*((x[j] - x_moon[j])/hyp);
+		vy[j] = vy[j-1] + DT*a*(y[j]/d[j]) + DT*a_moon*((y[j] - y_moon[j])/hyp);
 
 
 	}

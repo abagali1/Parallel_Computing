@@ -52,4 +52,6 @@ speed_plot.title.set_text( "Speed")
 
 fig.tight_layout(pad=2)
 
+plt.savefig('plot.png')
 plt.show()
+
