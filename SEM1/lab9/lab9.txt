@@ -1,0 +1,60 @@
+nt your name:
+
+
+
+Today's date:
+
+
+
+Class period:
+
+
+
+-----------------------------------------------------
+
+1. Earth and Moon in orbit.
+
+2. Launch a probe from the Moon toward Earth.
+
+3. Need to pick two parameters, speed and angle.
+
+4. Initialize probe:
+
+    x = --- ;
+    y = --- ;
+   vx = speed * cos( angle ) ;
+   vy = speed * sin( angle ) ;
+
+5. Initial (x,y) not critical.
+
+6. Gravity of Moon is small.
+
+7. Okay to launch from surface.
+
+8. Or start from "low Moon orbit."
+
+9. Or ignore the Moon's gravity for the first day.
+
+10. Find a pair (speed, angle) to maximize the exit
+speed of the probe.  Idea is to make one pass around
+Earth first and then have a subsequent interaction
+with the Moon, which in the meantime will have been
+continuing on its own way around its regular orbit.
+Find a very tight "fly by" behind the Moon so that
+the probe exits in an extreme hyperbolic trajectory.
+Don't worry about the exit angle because we could
+have delayed launch by some amount of time in order
+to "aim" at our deep space target (e.g., Jupiter).
+Describe the solution pair found, and the outcome,
+using whatever plots you deem appropriate.
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------
+END
