@@ -98,7 +98,7 @@ int main( int argc , char* argv[] )
 			x_moon[j] = x_moon[j-1] + DT * vx_moon[j-1] ;
 			y_moon[j] = y_moon[j-1] + DT * vy_moon[j-1] ;
 			d_moon[j] = sqrt( pow(x_moon[j],2) + pow(y_moon[j],2) );
-			a = -((G*M) / pow(d_moon[j],2));
+			double a = -((G*M) / pow(d_moon[j],2));
 			vx_moon[j] = vx_moon[j-1] + DT*a*(x_moon[j]/d_moon[j]);
 			vy_moon[j] = vy_moon[j-1] + DT*a*(y_moon[j]/d_moon[j]);
 
@@ -113,7 +113,7 @@ int main( int argc , char* argv[] )
 			// Spaceship and Moon
 			double dim = pow(x_moon[j]-x[j], 2) + pow(y_moon[j]-y[j],2);
 			double hyp = sqrt(dim);
-			a_moon = - ((G*M_MOON)/dim);
+			double a_moon = - ((G*M_MOON)/dim);
 
 
 			vx[j] = vx[j-1] + DT*a*(x[j]/d[j]) + DT*a_moon*((x[j] - x_moon[j])/hyp);
