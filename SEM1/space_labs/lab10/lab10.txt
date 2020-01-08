@@ -1,60 +1,38 @@
-Print your name:
-
-
-
-Today's date:
-
-
-
-Class period:
-
-
-
+Print your name: Anup Bagali
+Today's date: 1/8/2020
+Class period: 3
 -----------------------------------------------------
 
 1. Launch a probe from the Moon toward Earth.
-
 2. Initialize probe:
-
     x = --- ;
     y = --- ;
    vx = speed * cos( angle ) ;
    vy = speed * sin( angle ) ;
-
 3. Initial (x,y) not critical.
-
 4. But this seems to work well:
-
     x = ( 2 * Rm ) * cos( angle ) ;
     y = ( 2 * Rm ) * sin( angle ) ;
-
 5. Survey pairs of the two parameters (speed, angle).
 For each pair you need to characterize the outcome of
 the run.  Does the probe crash into the Moon?  Do we
 even exit the Earth-Moon system?  In cases that exit
 the system:
-
     speed > sqrt( 2 * G * mE / rE )
-
 Idea is to make one pass around Earth first and then
 have a subsequent interaction with the Moon, which in
 the meantime will have been continuing on its own way
 around its regular orbit.
-
 6. Are there other possible outcomes?
-
 7. Use angle = 181 , 182 , ... , 269 degrees
-
 8. Use speeds that escape the Moon initially but are
 not already escaping the Earth.
-
 9. MPI, split the pairs across multiple workers.
-
 10. Describe your runtime and what pair did you find
 that maximizes the exit speed?
 
-
-
-
+Angle: 230
+Speed: 1680
+Runtime: ~1 minute
 -----------------------------------------------------
 END
