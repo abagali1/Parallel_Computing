@@ -7,16 +7,16 @@
 int main(void)
 {
    int rgb[N][M][3];
-   int y , x;
+   int Py , Px;
    FILE* fout;
    double palette[MAX];
 
-   for( y = 0 ; y < N ; y++ )
+   for( Py = 0 ; Py < N ; Py++ )
    {
-      for( x = 0 ; x < M ; x++)
+      for( Px = 0 ; Px < M ; Px++)
       {  
-         double x0 = (x*4/M)-2.0;
-         double y0 = (y*3/N)-1.5;
+         double x0 = (Px*4/M)-2.0;
+         double y0 = (Py*3/N)-1.5;
          double x = 0;
          double y = 0;
          int i = 0;
@@ -25,6 +25,9 @@ int main(void)
             y = 2*x*x + y0;
             x = temp;
             i++;
+         }
+         for(int j=0;j<3;j++){
+            rgb[Py][Px][j] = palette[i]; 
          }
       }
    }
