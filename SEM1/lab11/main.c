@@ -1,8 +1,9 @@
 #include <stdio.h>
+#include <stdbool.h>
 
 #define M 640
 #define N 480
-#define MAX 1000
+#define MAX 100000
 
 int main(void)
 {
@@ -15,19 +16,30 @@ int main(void)
    {
       for( Px = 0 ; Px < M ; Px++)
       {  
-         double x0 = (Px*4/M)-2.0;
-         double y0 = (Py*3/N)-1.5;
+         double x0 = (Px*4.0/M)-2.0;
+         double y0 = (Py*4.0/N)-2.0;
          double x = 0;
          double y = 0;
+         bool broke = true;
          int i = 0;
-         while(x*x + y*y <= 4 && i < MAX){
+         while(i < MAX){
+            if(x*x + y*y > 4){
+               broke = false;
+               break;
+            }
             double temp = x*x - y*y + x0;
-            y = 2*x*x + y0;
+            y = 2*x*y + y0;
             x = temp;
             i++;
          }
-         for(int j=0;j<3;j++){
-            rgb[Py][Px][j] = palette[i]; 
+         if(broke){
+            rgb[Py][Px][0] = 0;
+            rgb[Py][Px][1] = 0;
+            rgb[Py][Px][2] = 255;
+         }else{
+            rgb[Py][Px][0] = 0;
+            rgb[Py][Px][1] = 0;
+            rgb[Py][Px][2] = 0;
          }
       }
    }
@@ -35,12 +47,12 @@ int main(void)
    fprintf( fout , "P3\n" ) ;
    fprintf( fout , "%d %d\n" , M , N ) ;
    fprintf( fout , "255\n" ) ;
-   for( y = 0 ; y < N ; y++ )
+   for( Py = 0 ; Py < N ; Py++ )
    {
-      for( x = 0 ; x < M ; x++)
+      for( Px = 0 ; Px < M ; Px++)
       {
          fprintf( fout , "%d %d %d\n" ,
-          rgb[y][x][0] , rgb[y][x][1] , rgb[y][x][2] ) ;
+          rgb[Py][Px][0] , rgb[Py][Px][1] , rgb[Py][Px][2] ) ;
       }
    }
    fclose( fout ) ;
