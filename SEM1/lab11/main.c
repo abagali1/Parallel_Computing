@@ -3,7 +3,7 @@
 
 #define M 640
 #define N 480
-#define MAX 100000
+#define MAX 1000
 
 int main(void)
 {
