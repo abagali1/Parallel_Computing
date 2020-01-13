@@ -1,13 +1,26 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
-#define M 640
-#define N 480
-#define MAX 1000
+#define M 1920
+#define N 1080
+#define MAX 10000
 
 int main(void)
 {
-   int rgb[N][M][3];
+   // int rgb[N][M][3];
+   int*** rgb = malloc(sizeof(int**) * N);
+
+   for (int i = 0; i < N; i++)
+   {
+      rgb[i] = malloc(sizeof(int*) * M);
+
+      for (int j = 0; j < M; j++)
+      {
+         rgb[i][j] = malloc(sizeof(int) * 3);
+      }
+   }
+
    int Py , Px;
    FILE* fout;
    double palette[MAX];
@@ -23,7 +36,7 @@ int main(void)
          bool broke = true;
          int i = 0;
          while(i < MAX){
-            if(x*x + y*y > 4){
+            if(x*x + y*y > 20){
                broke = false;
                break;
             }
