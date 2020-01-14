@@ -4,7 +4,7 @@
 
 #define M 1920
 #define N 1080
-#define MAX 10000
+#define MAX 1000
 
 int main(void)
 {
@@ -42,15 +42,16 @@ int main(void)
             x = temp;
             i++;
          }
-         if(broke){
-            rgb[Py][Px][0] = 0;
-            rgb[Py][Px][1] = 0;
-            rgb[Py][Px][2] = 255;
-         }else{
-            rgb[Py][Px][0] = 0;
-            rgb[Py][Px][1] = 0;
-            rgb[Py][Px][2] = 0;
+
+         if (broke)
+         {
+            i = 0;
          }
+
+         rgb[Py][Px][0] = (int)((i / 1.0 * MAX) * 255.0);
+         rgb[Py][Px][1] = (int)((i / 1.0 * MAX) * 255.0);
+         rgb[Py][Px][2] = (int)((i / 1.0 * MAX) * 255.0);
+
       }
    }
    fout = fopen( "ms.ppm" , "w" ) ;
