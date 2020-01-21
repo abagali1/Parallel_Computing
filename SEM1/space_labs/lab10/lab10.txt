@@ -31,8 +31,8 @@ not already escaping the Earth.
 10. Describe your runtime and what pair did you find
 that maximizes the exit speed?
 
-Angle: 230
-Speed: 1680
+Angle: 269
+Speed: 2190
 Runtime: ~1 minute
 -----------------------------------------------------
 END
