@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#define M 640
-#define N 480
+#define M 1920
+#define N 1080
 
 typedef struct
 {
@@ -75,6 +75,7 @@ void init(Sphere* a)
    a[3].h.b =      0    ;
 }
 
+
 int main(void){
     FILE* fout;
     Color** rgb = malloc(sizeof(Color*) * N);
@@ -85,6 +86,16 @@ int main(void){
     }
    Sphere spheres[4];
    init(spheres);
+
+    double aspect_ratio = (double)M/(double)N;
+    int Px, Py;
+    double x,y;
+    for(Py = 0; Py < N; Py++){
+        for(Px = 0; Px < M; Px++){
+        }
+    }
+
+
 
 
    fout = fopen( "ms.ppm" , "w" ) ;
