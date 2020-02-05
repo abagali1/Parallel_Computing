@@ -159,8 +159,6 @@ int main(void) {
 				double det = pow(dotp(ray, sphere.c),2)- (dotp(sphere.c, sphere.c) - pow(sphere.r,2));
 				if(det<0){
 					rgb[Py][Px] = BLACK;
-                    printf("%d, %d, %lf, %d, %d, %d\n",Px, Py, det, rgb[Py][Px].r, rgb[Py][Px].g, rgb[Py][Px].b);
-                    return;
 					continue;
 				}
 				double det_sqrt = sqrt(det);
