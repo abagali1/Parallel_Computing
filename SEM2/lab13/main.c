@@ -29,14 +29,14 @@ Sphere;
 
 const Color BLACK = (Color){.r=0, .g=0, .b=0};
 // the eye
-Vector eye = {
+const Vector eye = {
     0.50,
     0.50,
     -1.00
 }; 
 
 // the light
-Vector g = {
+const Vector g = {
     0.00,
     1.25,
     -0.50
@@ -141,41 +141,61 @@ int main(void) {
     init(spheres);
 
     double aspect_ratio = (1.0 * M) / (1.0 * N);
-    size_t Px, Py;
-    double x, y;
-	Sphere sphere;
-	double t_min = -1;
-	Sphere min_sphere;
-    for (Py = 0; Py < N; Py++) {
-        for (Px = 0; Px < M; Px++) {
-            x = (Px + 0.5) / (1.0 * M);
-            y = ((N - y) + 0.5) / (1.0 * N);
+    for (int Py = 0; Py < N; Py++) {
+        for (int Px = 0; Px < M; Px++) {
+            double x = (Px + 0.5) / (1.0 * M);
+            double y = ((N - y) + 0.5) / (1.0 * N);
             Vector ray = create_vector(eye, (Vector) {
                 .x = x,
-				.y = y
+				.y = y,
+                .z = 0
             });
+            double t_min = INFINITY;
+	        Sphere min_sphere;
 			for(int s=0;s < 4; s++){ // d = ray v = sphere vector
-				sphere = spheres[s];
-				double det = pow(dotp(ray, sphere.c),2)- (dotp(sphere.c, sphere.c) - pow(sphere.r,2));
+				Sphere sphere = spheres[s];
+				Vector v = subtract_vector(eye, sphere.c);
+                Vector d = ray;
+                double a = 1.0;
+                double b = 2.0*dotp(v, d);
+                double c = dotp(v,v) - sphere.r*sphere.r;
+
+                double det = pow(b,2) - 4*a*c;
+                                
 				if(det<0){
-					rgb[Py][Px] = BLACK;
 					continue;
 				}
-				double det_sqrt = sqrt(det);
-				double v_d = -dotp(sphere.c, ray);
-				double t = min((v_d + det_sqrt), (v_d - det_sqrt));
+                double det_sqrt = sqrt(det);
+                double t_plus = (-b + det_sqrt)/2.0;
+                double t_minus = (-b - det_sqrt)/2.0;
+                
+                double t;
+                if(t_plus >0 && t_minus > 0){
+				    t = min(t_plus, t_minus);
+                }else if(t_plus > 0 && t_minus < 0){
+                    t = t_plus;
+                }else if(t_plus < 0 && t_minus > 0){
+                    t = t_minus;
+                }else{
+                    continue;
+                }
+
 				if(t < t_min){
 					t_min = t;
 					min_sphere = sphere;
 				}
 			}
-			rgb[Py][Px]=min_sphere.h;
-			t_min = -1;	
-
+            if(t_min == INFINITY){
+                rgb[Py][Px] = BLACK;
+            }else{
+			    rgb[Py][Px]=min_sphere.h;
+            }
+            t_min = INFINITY;
+            //min_sphere = spheres[1];
         }
     }
 
-    fout = fopen("ms.ppm", "w");
+    fout = fopen("out.ppm", "w");
     fprintf(fout, "P3\n");
     fprintf(fout, "%d %d\n", M, N);
     fprintf(fout, "255\n");
