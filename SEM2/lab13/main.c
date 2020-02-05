@@ -42,13 +42,14 @@ Vector g = {
     -0.50
 }; 
 
-inline double max(double a, double b){
+double max(double a, double b){
 	return a>b ? a: b;
 }
 
-inline double min(double a, double b){
+double min(double a, double b){
 	return a<b ? a:b;
 }
+
 
 double dotp(Vector t, Vector u) {
     return t.x * u.x + t.y * u.y + t.z * u.z;
@@ -143,6 +144,8 @@ int main(void) {
     size_t Px, Py;
     double x, y;
 	Sphere sphere;
+	double t_min = -1;
+	Sphere min_sphere;
     for (Py = 0; Py < N; Py++) {
         for (Px = 0; Px < M; Px++) {
             x = (Px + 0.5) / (1.0 * M);
@@ -151,17 +154,25 @@ int main(void) {
                 .x = x,
 				.y = y
             });
-			for(int s=0;s < 4; s++){
+			for(int s=0;s < 4; s++){ // d = ray v = sphere vector
 				sphere = spheres[s];
-				double det = pow(dotp(ray, sphere.c),2)- (pow(dotp(sphere.c, sphere.c),2) - pow(sphere.r,2));
+				double det = pow(dotp(ray, sphere.c),2)- (dotp(sphere.c, sphere.c) - pow(sphere.r,2));
 				if(det<0){
 					rgb[Py][Px] = BLACK;
+                    printf("%d, %d, %lf, %d, %d, %d\n",Px, Py, det, rgb[Py][Px].r, rgb[Py][Px].g, rgb[Py][Px].b);
+                    return;
+					continue;
 				}
 				double det_sqrt = sqrt(det);
 				double v_d = -dotp(sphere.c, ray);
-				double t = min(v_d + det_sqrt, v_d - det_sqrt);
-				
+				double t = min((v_d + det_sqrt), (v_d - det_sqrt));
+				if(t < t_min){
+					t_min = t;
+					min_sphere = sphere;
+				}
 			}
+			rgb[Py][Px]=min_sphere.h;
+			t_min = -1;	
 
         }
     }
