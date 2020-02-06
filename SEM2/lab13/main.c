@@ -5,7 +5,7 @@
 
 #define M 1920
 #define N 1080
-#define SPHERES 4
+#define SPHERES 5
 
 typedef struct
 {
@@ -55,37 +55,61 @@ double dotp(Vector t, Vector u)
 
 void init(Sphere *a)
 {
-    a[0].c.x = 0.50;
-    a[0].c.y = -20000.00; // the floor
-    a[0].c.z = 0.50;
+    a[0].c = (Vector){ // Floor
+        .x = 0.50,
+        .y = -20000.00,
+        .z = 0.50,
+    };
     a[0].r = 20000.25;
-    a[0].h.r = 205; // color is Peru
-    a[0].h.g = 133;
-    a[0].h.b = 63;
+    a[0].h = (Color){
+        .r = 205,
+        .g = 133,
+        .b = 63
+    };
 
-    a[1].c.x = 0.50;
-    a[1].c.y = 0.50;
-    a[1].c.z = 0.50;
+    a[1].c = (Vector){ // Blue Sphere
+        .x = 0.50,
+        .y = 0.50,
+        .z = 0.50
+    };
     a[1].r = 0.25;
-    a[1].h.r = 0; // color is Blue
-    a[1].h.g = 0;
-    a[1].h.b = 255;
+    a[1].h = (Color){
+        .r = 0,
+        .g = 0,
+        .b = 255
+    };
 
-    a[2].c.x = 1.00;
-    a[2].c.y = 0.50;
-    a[2].c.z = 1.00;
+    a[2].c = (Vector){ // Green Sphere
+        .x = 1.00,
+        .y = 0.50,
+        .z = 1.00
+    };
     a[2].r = 0.25;
-    a[2].h.r = 0; // color is Green
-    a[2].h.g = 255;
-    a[2].h.b = 0;
+    a[2].h = (Color){
+        .r = 0,
+        .g = 255,
+        .b = 0
+    };
 
-    a[3].c.x = 0.00;
-    a[3].c.y = 0.75;
-    a[3].c.z = 1.25;
+    a[3].c = (Vector){ // Red Sphere
+        .x = 0.00,
+        .y = 0.75,
+        .z = 1.25
+    };
     a[3].r = 0.50;
-    a[3].h.r = 255; // color is Red
-    a[3].h.g = 0;
-    a[3].h.b = 0;
+    a[3].h = (Color){
+        .r = 255,
+        .g = 0,
+        .b = 0
+    };
+
+    a[4].c = g; // make light a sphere cause cool
+    a[4].r = 0.5;
+    a[4].h = (Color){
+        .r = 255,
+        .g = 255,
+        .b = 255
+    };
 }
 
 void normalize(Vector* v)
@@ -196,7 +220,7 @@ int main(void)
             }
             Vector intersection = add_vector(eye, scalar_multiply(ray, t_min-0.001));
             Vector sphere_to_light = create_vector(intersection, g);
-            for(int s = 0;s < SPHERES; s++){
+            for(int s = 0;s < SPHERES-1; s++){
                 Sphere sphere = spheres[s];
                 if(cast(sphere, sphere_to_light, intersection, &t)){
                     c.r /= 2;
