@@ -39,7 +39,8 @@ const Vector eye = {
 const Vector g = {
     0.00,
     1.25,
-    -0.50};
+    -0.50
+    };
 
 double max(double, double);
 double min(double, double);
@@ -117,7 +118,7 @@ Vector subtract_vector(Vector a, Vector b)
 {
     return (Vector){
         .x = a.x - b.x,
-        .y = a.x - b.y,
+        .y = a.y - b.y,
         .z = a.z - b.z};
 }
 
@@ -129,9 +130,9 @@ Vector scalar_multiply(Vector a, double scalar)
         .z = scalar * a.z};
 }
 
-bool cast(Sphere sphere, Vector ray, double* t)
+bool cast(Sphere sphere, Vector ray, Vector origin, double* t)
 {
-    Vector v = subtract_vector(eye, sphere.c);
+    Vector v = subtract_vector(origin, sphere.c);
     Vector d = ray;
     double a = 1.0;
     double b = 2.0 * dotp(v, d);
@@ -175,12 +176,12 @@ int main(void)
                 .z = 0});
             double t_min = INFINITY;
             Color c = BLACK;
-            for (int s = 0; s < 4; s++)
+            double t;
+            for (int s = 0; s < SPHERES; s++)
             {
                 Sphere sphere = spheres[s];
-                double t;
 
-                if (cast(sphere, ray, &t))
+                if (cast(sphere, ray, eye, &t))
                 {
                     if (t > t_min)
                     {
@@ -189,6 +190,24 @@ int main(void)
                     t_min = t;
                     c = sphere.h;
                 }
+            }
+            if(t_min == INFINITY){
+                continue;
+            }
+            Vector intersection = add_vector(eye, scalar_multiply(ray, t_min-0.001));
+            Vector sphere_to_light = create_vector(intersection, g);
+            for(int s = 0;s < SPHERES; s++){
+                Sphere sphere = spheres[s];
+                if(cast(sphere, sphere_to_light, intersection, &t)){
+                    c.r /= 2;
+                    c.g /= 2;
+                    c.b /= 2;
+                    break;
+                }else{
+                    continue;
+                }
+
+                
             }
             rgb[Py][Px] = c;
         }
