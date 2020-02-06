@@ -176,7 +176,7 @@ int main(void)
             double t_min = INFINITY;
             Color c = BLACK;
             for (int s = 0; s < 4; s++)
-            { // d = ray v = sphere vector
+            {
                 Sphere sphere = spheres[s];
                 double t;
 
