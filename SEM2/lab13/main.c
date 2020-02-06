@@ -3,60 +3,57 @@
 #include <stdbool.h>
 #include <math.h>
 
-
 #define M 1920
 #define N 1080
+#define SPHERES 4
 
-typedef struct {
+typedef struct
+{
     double x;
     double y;
     double z;
-}
-Vector;
+} Vector;
 
-typedef struct {
+typedef struct
+{
     int r;
     int g;
     int b;
-}
-Color;
+} Color;
 
-typedef struct {
+typedef struct
+{
     double r;
     Color h;
     Vector c;
-}
-Sphere;
+} Sphere;
 
-const Color BLACK = (Color){.r=0, .g=0, .b=0};
+const Color BLACK = (Color){.r = 0, .g = 0, .b = 0};
 // the eye
 const Vector eye = {
     0.50,
     0.50,
-    -1.00
-}; 
+    -1.00};
 
 // the light
 const Vector g = {
     0.00,
     1.25,
-    -0.50
-}; 
+    -0.50};
 
-double max(double a, double b){
-	return a>b ? a: b;
-}
+double max(double, double);
+double min(double, double);
 
-double min(double a, double b){
-	return a<b ? a:b;
-}
+inline double max(double a, double b) { return a > b ? a : b; }
+inline double min(double a, double b) { return a < b ? a : b; }
 
-
-double dotp(Vector t, Vector u) {
+double dotp(Vector t, Vector u)
+{
     return t.x * u.x + t.y * u.y + t.z * u.z;
 }
 
-void init(Sphere * a) {
+void init(Sphere *a)
+{
     a[0].c.x = 0.50;
     a[0].c.y = -20000.00; // the floor
     a[0].c.z = 0.50;
@@ -90,110 +87,110 @@ void init(Sphere * a) {
     a[3].h.b = 0;
 }
 
-void normalize(Vector* v) {
+void normalize(Vector* v)
+{
     double mag = sqrt(pow(v->x, 2) + pow(v->y, 2) + pow(v->z, 2));
     v->x /= mag;
     v->y /= mag;
     v->z /= mag;
 }
 
-Vector create_vector(Vector origin, Vector end) {
-    Vector v = (Vector) {
+Vector create_vector(Vector origin, Vector end)
+{
+    Vector v = (Vector){
         .x = end.x - origin.x,
-		.y = end.y - origin.y,
-		.z = end.z - origin.z
-    };
+        .y = end.y - origin.y,
+        .z = end.z - origin.z};
     normalize(&v);
     return v;
 }
 
-Vector add_vector(Vector a, Vector b) {
-    return (Vector) {
+Vector add_vector(Vector a, Vector b)
+{
+    return (Vector){
         .x = a.x + b.x,
-		.y = a.y + b.y,
-		.z = a.z + b.z
-    };
+        .y = a.y + b.y,
+        .z = a.z + b.z};
 }
 
-Vector subtract_vector(Vector a, Vector b) {
-    return (Vector) {
+Vector subtract_vector(Vector a, Vector b)
+{
+    return (Vector){
         .x = a.x - b.x,
-		.y = a.x - b.y,
-		.z = a.z - b.z
-    };
+        .y = a.x - b.y,
+        .z = a.z - b.z};
 }
 
-Vector scalar_multiply(Vector a, double scalar) {
-    return (Vector) {
+Vector scalar_multiply(Vector a, double scalar)
+{
+    return (Vector){
         .x = scalar * a.x,
-		.y = scalar * a.y,
-		.z = scalar * a.z
-    };
+        .y = scalar * a.y,
+        .z = scalar * a.z};
 }
 
-bool cast(Sphere sphere, Vector ray, double* t){
+bool cast(Sphere sphere, Vector ray, double* t)
+{
     Vector v = subtract_vector(eye, sphere.c);
     Vector d = ray;
     double a = 1.0;
-    double b = 2.0*dotp(v, d);
-    double c = dotp(v,v) - sphere.r*sphere.r;
+    double b = 2.0 * dotp(v, d);
+    double c = dotp(v, v) - sphere.r * sphere.r;
 
-    double det = pow(b,2) - 4.0*a*c;
+    double det = pow(b, 2) - 4.0 * a * c;
 
-                    
-    if(det<0){
+    if (det < 0)
+    {
         return false;
     }
     double det_sqrt = sqrt(det);
-    double t_plus = (-b + det_sqrt)/2.0;
-    double t_minus = (-b - det_sqrt)/2.0;
+    double t_plus = (-b + det_sqrt) / 2.0;
+    double t_minus = (-b - det_sqrt) / 2.0;
 
-    *t = (t_minus > 0 && t_plus >0) ?
-            min(t_minus, t_plus) :
-            max(t_minus, t_plus);
+    *t = (t_minus > 0 && t_plus > 0) ? min(t_minus, t_plus) : max(t_minus, t_plus);
 
     return *t > 0;
 }
 
-int main(void) {
-    FILE * fout;
-    Color ** rgb = malloc(sizeof(Color * ) * N);
+int main(void)
+{
+    FILE *fout;
+    Color **rgb = malloc(sizeof(Color* ) * N);
 
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < N; i++)
+    {
         rgb[i] = malloc(sizeof(Color) * M);
     }
-    Sphere spheres[4];
+    Sphere spheres[SPHERES];
     init(spheres);
 
     double aspect_ratio = (1.0 * M) / (1.0 * N);
-    for (int Py = 0; Py < N; Py++) {
-        for (int Px = 0; Px < M; Px++) {
-            double x = ((Px + 0.5) / (1.0 * M))*aspect_ratio;
-            double y = (((N - Py) + 0.5) / (1.0 * N));
-            Vector ray = create_vector(eye, (Vector) {
-                .x = x,
-				.y = y,
-                .z = 0
-            });
+    for (int Py = 0; Py < N; Py++)
+    {
+        for (int Px = 0; Px < M; Px++)
+        {
+            Vector ray = create_vector(eye, (Vector){
+                .x = ((Px + 0.5) / (1.0 * M)) * aspect_ratio,
+                .y = (((N - Py) + 0.5) / (1.0 * N)),
+                .z = 0});
             double t_min = INFINITY;
-	        Sphere min_sphere;
-			for(int s=0;s < 4; s++){ // d = ray v = sphere vector
-				Sphere sphere = spheres[s];
+            Color c = BLACK;
+            for (int s = 0; s < 4; s++)
+            { // d = ray v = sphere vector
+                Sphere sphere = spheres[s];
                 double t;
 
-                if(cast(sphere, ray, &t)){
-                    if(t>t_min){
+                if (cast(sphere, ray, &t))
+                {
+                    if (t > t_min)
+                    {
                         continue;
                     }
                     t_min = t;
-                    min_sphere = sphere;
+                    c = sphere.h;
                 }
-			}
-            if(t_min == INFINITY){
-                rgb[Py][Px] = BLACK;
-            }else{
-                rgb[Py][Px] = min_sphere.h;
             }
+            rgb[Py][Px] = c;
         }
     }
 
@@ -201,10 +198,12 @@ int main(void) {
     fprintf(fout, "P3\n");
     fprintf(fout, "%d %d\n", M, N);
     fprintf(fout, "255\n");
-    for (int Py = 0; Py < N; Py++) {
-        for (int Px = 0; Px < M; Px++) {
+    for (int Py = 0; Py < N; Py++)
+    {
+        for (int Px = 0; Px < M; Px++)
+        {
             fprintf(fout, "%d %d %d\n",
-                rgb[Py][Px].r, rgb[Py][Px].g, rgb[Py][Px].b);
+                    rgb[Py][Px].r, rgb[Py][Px].g, rgb[Py][Px].b);
         }
     }
     fclose(fout);
