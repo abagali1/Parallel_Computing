@@ -37,7 +37,7 @@ const Vector eye = {
 
 // the light
 const Vector g = {
-    0.00,
+    1.50,
     1.25,
     -0.50
     };
