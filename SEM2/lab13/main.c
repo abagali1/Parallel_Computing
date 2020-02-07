@@ -3,10 +3,9 @@
 #include <stdbool.h>
 #include <math.h>
 
-#define M 1920
-#define N 1080
+#define M 3840
+#define N 2160
 #define SPHERES 5
-
 
 typedef struct
 {
@@ -29,7 +28,7 @@ typedef struct
     Vector c;
 } Sphere;
 
-const Color BACKGROUND = (Color){.r = 51, .g = 51, .b = 51};
+const Color BACKGROUND = (Color){.r = 100, .g = 99, .b = 97};
 // the eye
 const Vector eye = {
     0.50,
@@ -187,6 +186,7 @@ int main(void)
     init(spheres);
 
     double aspect_ratio = (1.0 * M) / (1.0 * N);
+    #pragma omp parallel for
     for (int Py = 0; Py < N; Py++)
     {
         for (int Px = 0; Px < M; Px++)
@@ -217,11 +217,15 @@ int main(void)
                 rgb[Py][Px] = c;
                 continue;
             }
-            if(sphere_index == 0){
-                     
-            }
             Vector intersection = add_vector(eye, scalar_multiply(ray, t_min-0.001));
             Vector sphere_to_light = create_vector(intersection, g);
+            if(sphere_index == 0){
+                if(((int)round(intersection.x/0.1) + (int)round(intersection.z/0.1)) % 2 == 0){
+                    c.r = 255;
+                    c.g = 255;
+                    c.b = 255;
+                }
+            }
             for(int s = 0;s < SPHERES-1; s++){
                 Sphere sphere = spheres[s];
                 if(cast(sphere, sphere_to_light, intersection, &t)){
