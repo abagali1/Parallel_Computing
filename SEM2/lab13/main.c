@@ -7,6 +7,7 @@
 #define N 1080
 #define SPHERES 5
 
+
 typedef struct
 {
     double x;
@@ -28,7 +29,7 @@ typedef struct
     Vector c;
 } Sphere;
 
-const Color BLACK = (Color){.r = 0, .g = 0, .b = 0};
+const Color BACKGROUND = (Color){.r = 51, .g = 51, .b = 51};
 // the eye
 const Vector eye = {
     0.50,
@@ -62,9 +63,9 @@ void init(Sphere *a)
     };
     a[0].r = 20000.25;
     a[0].h = (Color){
-        .r = 205,
-        .g = 133,
-        .b = 63
+        .r = 100,
+        .g = 99,
+        .b = 97
     };
 
     a[1].c = (Vector){ // Blue Sphere
@@ -199,24 +200,29 @@ int main(void)
                 .y = (((N - Py) + 0.5) / (1.0 * N)),
                 .z = 0});
             double t_min = INFINITY;
-            Color c = BLACK;
+            Color c = BACKGROUND;
             double t;
+            int sphere_index;
             for (int s = 0; s < SPHERES; s++)
             {
                 Sphere sphere = spheres[s];
 
                 if (cast(sphere, ray, eye, &t))
                 {
-                    if (t > t_min)
+                    if (t < t_min)
                     {
-                        continue;
+                        t_min = t;
+                        c = sphere.h;
+                        sphere_index = s;
                     }
-                    t_min = t;
-                    c = sphere.h;
                 }
             }
             if(t_min == INFINITY){
+                rgb[Py][Px] = c;
                 continue;
+            }
+            if(sphere_index == 0){
+                     
             }
             Vector intersection = add_vector(eye, scalar_multiply(ray, t_min-0.001));
             Vector sphere_to_light = create_vector(intersection, g);
