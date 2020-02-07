@@ -106,11 +106,7 @@ void init(Sphere *a)
 
     a[4].c = g; // make light a sphere cause cool
     a[4].r = 0.5;
-    a[4].h = (Color){
-        .r = 255,
-        .g = 255,
-        .b = 255
-    };
+    a[4].h = BACKGROUND;
 }
 
 void normalize(Vector* v)
