@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include <math.h>
 
-#define M 3840
-#define N 2160
+#define M 1920
+#define N 1080
 #define SPHERES 5
 
 typedef struct
@@ -175,6 +175,81 @@ bool cast(Sphere sphere, Vector ray, Vector origin, double* t)
     return *t > 0;
 }
 
+
+Color get_color(Vector ray, Vector origin, Sphere* spheres){
+    double t_min = INFINITY;
+    Color c = BACKGROUND;
+    double t;
+    int sphere_index;
+    for (int s = 0; s < SPHERES; s++)
+    {
+        Sphere sphere = spheres[s];
+
+        if (cast(sphere, ray, origin, &t))
+        {
+            if (t < t_min)
+            {
+                t_min = t;
+                c = sphere.h;
+                sphere_index = s;
+            }
+        }
+    }
+    if(t_min == INFINITY){
+        return c;
+    }
+    if(sphere_index == 4){
+        return WHITE;
+    }
+    Vector X = add_vector(origin, scalar_multiply(ray, t_min-0.001));
+    Vector L = create_vector(X, g);
+    if(sphere_index==0 && ((int)round(X.x/0.1) + (int)round(X.z/0.1)) % 2 == 0){
+        c = BLACK;
+    }
+
+    bool shadow = false;
+
+    for(int s = 0;s < SPHERES-1; s++){
+        Sphere sphere = spheres[s];
+        if(cast(sphere, L, X, &t)){
+            c.r /= 2;
+            c.g /= 2;
+            c.b /= 2;
+            shadow = true;
+            break;
+        }else{
+            continue;
+        }   
+    }
+
+    Vector n = create_vector(spheres[sphere_index].c, X);
+    if (!shadow && sphere_index != 4)
+    {
+        double intensity = .5*dotp(n,L)+.5;
+
+        if(intensity < 0){
+            intensity = 0;
+        }
+        c.r *= intensity;
+        c.g *= intensity;
+        c.b *= intensity;
+    }
+    Vector W = subtract_vector(ray, scalar_multiply(n, 2*dotp(ray,n)));
+    Color reflect = get_color(W, L, spheres);
+
+    c.r *= 0.5;
+    c.b *= 0.5;
+    c.g *= 0.5;
+
+    c.r += reflect.r*0.5;
+    c.g += reflect.g*0.5;
+    c.b += reflect.b*0.5;
+
+    return c;
+
+}
+
+
 int main(void)
 {
     FILE *fout;
@@ -197,63 +272,8 @@ int main(void)
                 .x = ((Px + 0.5) / (1.0 * M)) * aspect_ratio,
                 .y = (((N - Py) + 0.5) / (1.0 * N)),
                 .z = 0});
-            double t_min = INFINITY;
-            Color c = BACKGROUND;
-            double t;
-            int sphere_index;
-            for (int s = 0; s < SPHERES; s++)
-            {
-                Sphere sphere = spheres[s];
-
-                if (cast(sphere, ray, eye, &t))
-                {
-                    if (t < t_min)
-                    {
-                        t_min = t;
-                        c = sphere.h;
-                        sphere_index = s;
-                    }
-                }
-            }
-            if(t_min == INFINITY){
-                rgb[Py][Px] = c;
-                continue;
-            }
-            Vector X = add_vector(eye, scalar_multiply(ray, t_min-0.001));
-            Vector L = create_vector(X, g);
-            if(sphere_index==0 && ((int)round(X.x/0.1) + (int)round(X.z/0.1)) % 2 == 0){
-                c = BLACK;
-            }
-
-            bool shadow = false;
-
-            for(int s = 0;s < SPHERES-1; s++){
-                Sphere sphere = spheres[s];
-                if(cast(sphere, L, X, &t)){
-                    c.r /= 2;
-                    c.g /= 2;
-                    c.b /= 2;
-                    shadow = true;
-                    break;
-                }else{
-                    continue;
-                }   
-            }
-
-            if (!shadow && sphere_index != 4)
-            {
-                Vector n = create_vector(spheres[sphere_index].c, X);
-                double intensity = .5*dotp(n,L)+.5;
-
-                if(intensity < 0){
-                    intensity = 0;
-                }
-                c.r *= intensity;
-                c.g *= intensity;
-                c.b *= intensity;
-            }
-
-            rgb[Py][Px] = c;
+            
+            rgb[Py][Px] = get_color(ray, eye, spheres);
         }
     }
 
