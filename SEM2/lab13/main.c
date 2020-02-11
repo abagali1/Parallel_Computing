@@ -29,6 +29,8 @@ typedef struct
 } Sphere;
 
 const Color BACKGROUND = (Color){.r = 100, .g = 99, .b = 97};
+const Color WHITE = (Color){.r = 255, .g = 255, .b = 255};
+const Color BLACK = (Color){.r = 0, .g = 0, .b = 0};
 // the eye
 const Vector eye = {
     0.50,
@@ -217,24 +219,40 @@ int main(void)
                 rgb[Py][Px] = c;
                 continue;
             }
-            Vector intersection = add_vector(eye, scalar_multiply(ray, t_min-0.001));
-            Vector sphere_to_light = create_vector(intersection, g);
-            if(sphere_index==0 && ((int)round(intersection.x/0.1) + (int)round(intersection.z/0.1)) % 2 == 0){
-                c.r = 255;
-                c.g = 255;
-                c.b = 255;
+            Vector X = add_vector(eye, scalar_multiply(ray, t_min-0.001));
+            Vector L = create_vector(X, g);
+            if(sphere_index==0 && ((int)round(X.x/0.1) + (int)round(X.z/0.1)) % 2 == 0){
+                c = BLACK;
             }
+
+            bool shadow = false;
+
             for(int s = 0;s < SPHERES-1; s++){
                 Sphere sphere = spheres[s];
-                if(cast(sphere, sphere_to_light, intersection, &t)){
+                if(cast(sphere, L, X, &t)){
                     c.r /= 2;
                     c.g /= 2;
                     c.b /= 2;
+                    shadow = true;
                     break;
                 }else{
                     continue;
-                }
+                }   
             }
+
+            if (!shadow && sphere_index != 4)
+            {
+                Vector n = create_vector(spheres[sphere_index].c, X);
+                double intensity = .5*dotp(n,L)+.5;
+
+                if(intensity < 0){
+                    intensity = 0;
+                }
+                c.r *= intensity;
+                c.g *= intensity;
+                c.b *= intensity;
+            }
+
             rgb[Py][Px] = c;
         }
     }
