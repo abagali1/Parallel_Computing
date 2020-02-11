@@ -219,12 +219,10 @@ int main(void)
             }
             Vector intersection = add_vector(eye, scalar_multiply(ray, t_min-0.001));
             Vector sphere_to_light = create_vector(intersection, g);
-            if(sphere_index == 0){
-                if(((int)round(intersection.x/0.1) + (int)round(intersection.z/0.1)) % 2 == 0){
-                    c.r = 255;
-                    c.g = 255;
-                    c.b = 255;
-                }
+            if(sphere_index==0 && ((int)round(intersection.x/0.1) + (int)round(intersection.z/0.1)) % 2 == 0){
+                c.r = 255;
+                c.g = 255;
+                c.b = 255;
             }
             for(int s = 0;s < SPHERES-1; s++){
                 Sphere sphere = spheres[s];
@@ -236,8 +234,6 @@ int main(void)
                 }else{
                     continue;
                 }
-
-                
             }
             rgb[Py][Px] = c;
         }
