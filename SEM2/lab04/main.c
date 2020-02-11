@@ -6,6 +6,7 @@
 #define M 1920
 #define N 1080
 #define SPHERES 5
+#define PI 3.14159265358979323846
 
 typedef struct
 {
@@ -110,6 +111,41 @@ void init(Sphere *a)
     a[4].h = BACKGROUND;
 }
 
+int mercator_w;
+int mercator_h;
+Color** read_mercator()
+{
+    FILE* ppmf;
+
+    Color** mercator_ppm;
+    char buff[255];
+    ppmf = fopen("mercator82.ppm", "r");
+    fscanf(ppmf, "%s", buff); //read P3 -> 0
+    fscanf(ppmf, "%s", buff); //read width
+    mercator_w = atoi(buff);
+    fscanf(ppmf, "%s", buff); //read height
+    mercator_h = atoi(buff);
+    fscanf(ppmf, "%s", buff); //read 255 -> 0
+    //init ppm
+    mercator_ppm = (Color **)malloc(mercator_h * sizeof(Color *));
+    for(int i = 0; i < mercator_h; i++)
+        mercator_ppm[i] = (Color *)malloc(mercator_w * sizeof(Color));
+    //fill ppm
+    for(int i = 0; i < mercator_h * mercator_w; i++)
+    {
+        Color h;
+        fscanf(ppmf, "%s", buff);
+        h.r = atoi(buff);
+        fscanf(ppmf, "%s", buff);
+        h.g = atoi(buff);
+        fscanf(ppmf, "%s", buff);
+        h.b = atoi(buff);
+        mercator_ppm[i / mercator_w][i % mercator_w] = h;
+    }
+    return mercator_ppm;
+   
+}
+
 void normalize(Vector* v)
 {
     double mag = sqrt(pow(v->x, 2) + pow(v->y, 2) + pow(v->z, 2));
@@ -176,7 +212,7 @@ bool cast(Sphere sphere, Vector ray, Vector origin, double* t)
 }
 
 
-Color get_color(Vector ray, Vector origin, Sphere* spheres){
+Color get_color(Vector ray, Vector origin, Sphere* spheres, Color** mercator){
     double t_min = INFINITY;
     Color c = BACKGROUND;
     double t;
@@ -195,12 +231,10 @@ Color get_color(Vector ray, Vector origin, Sphere* spheres){
             }
         }
     }
-    if(t_min == INFINITY){
+    if(t_min == INFINITY || sphere_index == SPHERES-1){
         return c;
     }
-    if(sphere_index == 4){
-        return WHITE;
-    }
+
     Vector X = add_vector(origin, scalar_multiply(ray, t_min-0.001));
     Vector L = create_vector(X, g);
     if(sphere_index==0 && ((int)round(X.x/0.1) + (int)round(X.z/0.1)) % 2 == 0){
@@ -222,7 +256,19 @@ Color get_color(Vector ray, Vector origin, Sphere* spheres){
         }   
     }
 
-    Vector n = create_vector(spheres[sphere_index].c, X);
+    Vector n = subtract_vector(X, spheres[sphere_index].c);
+    normalize(&n);
+
+    if(sphere_index == 8){
+        double lat_location = acos(n.y);
+        double lon_location = atan2(n.z, n.x) + PI;
+
+        int lat = lat_location * mercator_h/PI;
+        int lon = lon_location * mercator_w/PI*2.0;
+        
+        c = mercator[lat][(lon+100)%mercator_w];
+    }
+    
     if (!shadow && sphere_index != 4)
     {
         double intensity = .5*dotp(n,L)+.5;
@@ -235,11 +281,11 @@ Color get_color(Vector ray, Vector origin, Sphere* spheres){
         c.b *= intensity;
     }
     Vector W = subtract_vector(ray, scalar_multiply(n, 2*dotp(ray,n)));
-    Color reflect = get_color(W, L, spheres);
+    Color reflect = get_color(W, L, spheres, mercator);
 
     c.r *= 0.5;
-    c.b *= 0.5;
     c.g *= 0.5;
+    c.b *= 0.5;
 
     c.r += reflect.r*0.5;
     c.g += reflect.g*0.5;
@@ -259,6 +305,7 @@ int main(void)
     {
         rgb[i] = malloc(sizeof(Color) * M);
     }
+    Color** mercator_color = read_mercator();
     Sphere spheres[SPHERES];
     init(spheres);
 
@@ -273,7 +320,7 @@ int main(void)
                 .y = (((N - Py) + 0.5) / (1.0 * N)),
                 .z = 0});
             
-            rgb[Py][Px] = get_color(ray, eye, spheres);
+            rgb[Py][Px] = get_color(ray, eye, spheres, mercator_color);
         }
     }
 
