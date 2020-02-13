@@ -217,7 +217,7 @@ Color get_color(Vector ray, Vector origin, Sphere* spheres, Color** mercator){
     Color c = BACKGROUND;
     double t;
     int sphere_index;
-    for (int s = 0; s < SPHERES; s++)
+    for (int s = 0; s < SPHERES; s++) // calculate minimum T value
     {
         Sphere sphere = spheres[s];
 
@@ -231,19 +231,19 @@ Color get_color(Vector ray, Vector origin, Sphere* spheres, Color** mercator){
             }
         }
     }
-    if(t_min == INFINITY || sphere_index == SPHERES-1){
+    if(t_min == INFINITY || sphere_index == SPHERES-1){ // base case, we have missed a sphere
         return c;
     }
 
-    Vector X = add_vector(origin, scalar_multiply(ray, t_min-0.001));
-    Vector L = create_vector(X, g);
-    if(sphere_index==0 && ((int)round(X.x/0.1) + (int)round(X.z/0.1)) % 2 == 0){
+    Vector X = add_vector(origin, scalar_multiply(ray, t_min-0.001)); // Position Vector
+    Vector L = create_vector(X, g); // Intersection Vector
+    if(sphere_index==0 && ((int)round(X.x/0.1) + (int)round(X.z/0.1)) % 2 == 0){ // Add checkerboards
         c = BLACK;
     }
 
-    bool shadow = false;
+    bool shadow = false; 
 
-    for(int s = 0;s < SPHERES-1; s++){
+    for(int s = 0;s < SPHERES-1; s++){ // Calculate shadows
         Sphere sphere = spheres[s];
         if(cast(sphere, L, X, &t)){
             c.r /= 2;
@@ -256,10 +256,10 @@ Color get_color(Vector ray, Vector origin, Sphere* spheres, Color** mercator){
         }   
     }
 
-    Vector n = subtract_vector(X, spheres[sphere_index].c);
-    normalize(&n);
+    Vector n = subtract_vector(X, spheres[sphere_index].c); // Vector Normal to Sphere
+    normalize(&n); // n/R (Radius of Sphere)
 
-    if(sphere_index == 8){
+    if(sphere_index == 8){ // Add mercator texture
         double lat_location = acos(n.y);
         double lon_location = atan2(n.z, n.x) + PI;
 
@@ -269,9 +269,9 @@ Color get_color(Vector ray, Vector origin, Sphere* spheres, Color** mercator){
         c = mercator[lat][(lon+100)%mercator_w];
     }
     
-    if (!shadow && sphere_index != 4)
+    if (!shadow && sphere_index != 4) // Calculate gradient using lambert's law, except for light sphere
     {
-        double intensity = .5*dotp(n,L)+.5;
+        double intensity = .5*dotp(n,L)+.5; // cos(theta)
 
         if(intensity < 0){
             intensity = 0;
