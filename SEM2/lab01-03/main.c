@@ -44,16 +44,10 @@ const Vector g = {
     -0.50
     };
 
-double max(double, double);
-double min(double, double);
 
-inline double max(double a, double b) { return a > b ? a : b; }
-inline double min(double a, double b) { return a < b ? a : b; }
-
-double dotp(Vector t, Vector u)
-{
-    return t.x * u.x + t.y * u.y + t.z * u.z;
-}
+static inline double max(double a, double b) { return a > b ? a : b; }
+static inline double min(double a, double b) { return a < b ? a : b; }
+static inline double dotp(Vector t, Vector u) { return t.x * u.x + t.y * u.y + t.z * u.z; }
 
 void init(Sphere *a)
 {
